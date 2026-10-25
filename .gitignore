@@ -1,0 +1,12 @@
+node_modules
+.next
+.open-next
+.wrangler
+.lighthouseci
+out
+next-env.d.ts
+playwright-report
+test-results
+*.tsbuildinfo
+.env*
+.dev.vars
