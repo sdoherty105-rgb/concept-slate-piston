@@ -5,6 +5,7 @@ import { ConceptBanner } from "@/components/concept-banner";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import "./globals.css";
+import "./workshop.css";
 
 const display = localFont({
   src: "./fonts/SpaceGrotesk-Variable.woff2",
@@ -63,3 +64,4 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
+

@@ -45,7 +45,7 @@ test("robots.txt disallows everything", async ({ request }) => {
 
 test("home page has every required section", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText(/built on precision/i);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(/under the bonnet/i);
   for (const id of ["services", "diagnose", "how-it-works", "pricing", "book", "visit"]) {
     await expect(page.locator(`section#${id}`)).toHaveCount(1);
   }
@@ -134,11 +134,11 @@ test("booking form shows a demo success state and never makes a network request"
   expect(requests.filter((r) => new URL(r.url).origin !== origin)).toEqual([]);
 });
 
-test("form has no action endpoint and the page makes no third-party requests", async ({ page }) => {
+test("form has no action endpoint and the page makes no third-party requests", async ({ page, baseURL }) => {
   const external: string[] = [];
   page.on("request", (r) => {
     const u = new URL(r.url());
-    if (u.origin !== new URL(page.url() === "about:blank" ? "http://localhost:3000" : page.url()).origin && !r.url().startsWith("data:")) {
+    if (u.origin !== new URL(baseURL!).origin && !r.url().startsWith("data:")) {
       external.push(r.url());
     }
   });
@@ -154,7 +154,7 @@ test.describe("without JavaScript", () => {
 
   test("content stays readable and every symptom is listed", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/built on precision/i);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(/under the bonnet/i);
     await expect(page.locator("#diagnose")).toContainText("Worn brake pads");
     await expect(page.locator("#diagnose")).toContainText("Faulty oxygen or emissions sensor");
     await expect(page.locator("#pricing")).toContainText("$229");
@@ -168,3 +168,4 @@ test("pricing page shows every service group", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toContainText(/priced in the open/i);
   await expect(page.locator(".price-group")).toHaveCount(5);
 });
+
