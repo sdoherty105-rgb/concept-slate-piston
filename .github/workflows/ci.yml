@@ -57,9 +57,13 @@ jobs:
       - run: npm run build
       - name: Lighthouse, mobile emulation
         run: npx lhci autorun
+      - name: Score summary
+        if: always()
+        run: node scripts/lh-summary.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: lighthouse-reports
           path: .lighthouseci
+          include-hidden-files: true
           retention-days: 7
