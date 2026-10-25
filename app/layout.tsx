@@ -8,9 +8,10 @@ import "./globals.css";
 
 const display = localFont({
   src: "./fonts/SpaceGrotesk-Variable.woff2",
-  weight: "300 700",
+  weight: "400 700",
   variable: "--font-display",
   display: "swap",
+  preload: true,
   fallback: ["system-ui", "Arial", "sans-serif"],
 });
 
@@ -21,6 +22,7 @@ const body = localFont({
   ],
   variable: "--font-body",
   display: "swap",
+  preload: false,
   fallback: ["system-ui", "Arial", "sans-serif"],
 });
 

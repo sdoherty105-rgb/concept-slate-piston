@@ -92,7 +92,7 @@ export function BookingForm() {
     }));
     setErrors((cur) => ({ ...cur, service: undefined }));
     const bits = [prefill.service ? serviceById(prefill.service).name : null, prefill.symptom].filter(Boolean);
-    setPrefillNote(bits.length ? `Filled in from the diagnostics panel: ${bits.join(" · ")}.` : "");
+    setPrefillNote(bits.length ? `Filled in from the diagnostics panel: ${bits.join(", ")}.` : "");
   }, [prefill]);
 
   useEffect(() => {

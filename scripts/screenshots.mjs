@@ -30,7 +30,7 @@ for (const s of sizes) {
     await page.screenshot({ path: `${out}/${p.name}-${s.name}.png`, fullPage: true });
   }
   await page.goto(base + "/", { waitUntil: "networkidle" });
-  await page.getByRole("radio", { name: /squeal or grind when braking/i }).check({ force: true });
+  await page.getByRole("radio", { name: /squeal or grind when braking/i }).click();
   await page.locator("#diagnose").screenshot({ path: `${out}/diagnostics-${s.name}.png` });
   await ctx.close();
 }

@@ -54,7 +54,7 @@ test("home page has every required section", async ({ page }) => {
 });
 
 async function pickSymptom(page: Page, name: RegExp) {
-  await page.getByRole("radio", { name }).check({ force: true });
+  await page.getByRole("radio", { name }).click();
 }
 
 test("diagnostics panel shows causes and leads to a pre-filled booking", async ({ page }) => {

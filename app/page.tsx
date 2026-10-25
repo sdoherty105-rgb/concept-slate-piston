@@ -4,8 +4,9 @@ import { BookingForm } from "@/components/booking-form";
 import { Diagnostics } from "@/components/diagnostics";
 import { HeroArt } from "@/components/hero-art";
 import { PriceTable } from "@/components/price-table";
+import { Readout } from "@/components/readout";
 import { SiteMap } from "@/components/site-map";
-import { business, hours, pricing, process, promises, services } from "@/lib/data";
+import { business, hours, pricing, process, promises, services, symptoms } from "@/lib/data";
 
 export default function Home() {
   return (
@@ -13,7 +14,7 @@ export default function Home() {
       <section className="hero theme-dark" aria-labelledby="hero-title">
         <div className="container hero__grid">
           <div className="hero__copy">
-            <p className="eyebrow">Independent automotive workshop · {business.suburb}</p>
+            <p className="eyebrow">Independent automotive workshop, {business.suburb}</p>
             <h1 id="hero-title" className="h-display h-display--xl">
               Built on <span className="nowrap">precision<span className="accent">.</span></span>
             </h1>
@@ -37,7 +38,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="services" className="section theme-light" aria-labelledby="services-title">
+      <section id="services" className="section section--defer theme-light" aria-labelledby="services-title">
         <div className="container">
           <div className="section-head">
             <p className="eyebrow">What we do</p>
@@ -77,7 +78,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="diagnose" className="section theme-slate" aria-labelledby="diagnose-title">
+      <section id="diagnose" className="section section--defer theme-slate" aria-labelledby="diagnose-title">
         <div className="container">
           <div className="section-head">
             <p className="eyebrow">Diagnostics panel</p>
@@ -89,11 +90,14 @@ export default function Home() {
               then takes you to a booking with the details already filled in.
             </p>
           </div>
-          <Diagnostics />
+          <Diagnostics
+            items={symptoms.map(({ id, label, hint }) => ({ id, label, hint }))}
+            panels={Object.fromEntries(symptoms.map((s) => [s.id, <Readout key={s.id} symptom={s} />]))}
+          />
         </div>
       </section>
 
-      <section id="how-it-works" className="section theme-light" aria-labelledby="how-title">
+      <section id="how-it-works" className="section section--defer theme-light" aria-labelledby="how-title">
         <div className="container">
           <div className="section-head">
             <p className="eyebrow">How a job works</p>
@@ -118,7 +122,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="pricing" className="section theme-dark" aria-labelledby="pricing-title">
+      <section id="pricing" className="section section--defer theme-dark" aria-labelledby="pricing-title">
         <div className="container">
           <div className="section-head">
             <p className="eyebrow">Transparent pricing</p>
@@ -140,7 +144,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="book" className="section theme-light section--anchor" aria-labelledby="book-title">
+      <section id="book" className="section section--defer theme-light section--anchor" aria-labelledby="book-title">
         <div className="container book-grid">
           <div className="book-intro">
             <p className="eyebrow">Book a service</p>
@@ -167,7 +171,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="visit" className="section theme-slate" aria-labelledby="visit-title">
+      <section id="visit" className="section section--defer theme-slate" aria-labelledby="visit-title">
         <div className="container visit-grid">
           <div>
             <p className="eyebrow">Hours and location</p>

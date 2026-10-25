@@ -7,12 +7,6 @@ export function HeroArt() {
         role="img"
         aria-label="Technical line drawing of a piston, connecting rod and crankshaft with dimension lines and numbered callouts. Illustrative artwork."
       >
-        <defs>
-          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-            <path d="M0 1 L10 5 L0 9 z" fill="#F07836" />
-          </marker>
-        </defs>
-
         <line className="hero-art__centre" x1="240" y1="14" x2="240" y2="592" stroke="#F07836" strokeWidth="1" strokeDasharray="14 4 3 4" opacity="0.7" />
 
         <circle cx="240" cy="500" r="80" fill="none" stroke="#737D83" strokeWidth="1" strokeDasharray="4 5" />
@@ -50,10 +44,10 @@ export function HeroArt() {
         <circle cx="277" cy="448" r="4.5" fill="#F07836" />
 
         <g stroke="#F07836" strokeWidth="1.2" fill="none">
-          <line x1="150" y1="38" x2="330" y2="38" markerStart="url(#arrow)" markerEnd="url(#arrow)" />
+          <line x1="150" y1="38" x2="330" y2="38" />
           <line x1="150" y1="30" x2="150" y2="68" strokeWidth="0.8" />
           <line x1="330" y1="30" x2="330" y2="68" strokeWidth="0.8" />
-          <line x1="110" y1="70" x2="110" y2="258" markerStart="url(#arrow)" markerEnd="url(#arrow)" />
+          <line x1="110" y1="70" x2="110" y2="258" />
           <line x1="104" y1="70" x2="146" y2="70" strokeWidth="0.8" />
           <line x1="104" y1="258" x2="146" y2="258" strokeWidth="0.8" />
         </g>
