@@ -48,3 +48,8 @@ Not deployed, and no domain is configured. `wrangler.jsonc` names the worker `co
 Palette: graphite `#141719`, slate `#343C42`, off-white `#F0F1EF`, signal orange `#F07836`, steel `#737D83`. Contrast is checked in `tests/data.test.ts`. Orange is used as text only on graphite, and on light surfaces a darker orange (`#B8470F`) carries accents. Steel `#737D83` is kept for borders and decorative lines. Two lighter and darker steel tints carry small text on dark and light surfaces.
 
 Fonts: Space Grotesk (display) and IBM Plex Sans (body).
+
+
+## Visual redesign
+
+The homepage uses a blue workshop shopfront, a bespoke vehicle elevation, a symptom-led entry point and open service rows. The charcoal/orange dashboard and repeated service-card panels have been replaced. Existing booking prefill, validation and no-network demo behaviour are retained.

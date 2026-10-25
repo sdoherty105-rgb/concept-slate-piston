@@ -2,39 +2,40 @@ import Link from "next/link";
 import { BookLink } from "@/components/book-link";
 import { BookingForm } from "@/components/booking-form";
 import { Diagnostics } from "@/components/diagnostics";
-import { HeroArt } from "@/components/hero-art";
+import { VehicleDrawing } from "@/components/vehicle-drawing";
 import { PriceTable } from "@/components/price-table";
 import { Readout } from "@/components/readout";
-import { SiteMap } from "@/components/site-map";
-import { business, hours, pricing, process, promises, services, symptoms } from "@/lib/data";
+
+import { business, hours, pricing, process, services, symptoms } from "@/lib/data";
 
 export default function Home() {
   return (
     <>
-      <section className="hero theme-dark" aria-labelledby="hero-title">
-        <div className="container hero__grid">
-          <div className="hero__copy">
-            <p className="eyebrow">Independent automotive workshop, {business.suburb}</p>
-            <h1 id="hero-title" className="h-display h-display--xl">
-              Built on <span className="nowrap">precision<span className="accent">.</span></span>
-            </h1>
+      <section className="workshop-front theme-light" aria-labelledby="hero-title">
+        <div className="container">
+          <div className="workshop-overline"><span>Independent automotive workshop</span><span>Welshpool, Western Australia</span></div>
+          <div className="workshop-title"><h1 id="hero-title">Let&rsquo;s look<br />under the bonnet.</h1><div><p>Servicing, repairs and diagnostics.<br />A written quote before the work starts.</p><BookLink className="btn btn--primary">Book a service</BookLink></div></div>
+          <VehicleDrawing />
+          <div className="workshop-strip"><span>Logbook servicing</span><span>Brakes &amp; suspension</span><span>Diagnostics</span><Link prefetch={false} href="/#diagnose">Find your symptom</Link></div>
+        </div>
+      </section>
+
+      <section id="diagnose" className="section section--defer theme-slate" aria-labelledby="diagnose-title">
+        <div className="container">
+          <div className="section-head">
+            <p className="eyebrow">Start with the symptom</p>
+            <h2 id="diagnose-title" className="h-display h-display--lg">
+              What is your car doing?
+            </h2>
             <p className="lead">
-              Servicing, diagnostics, brakes, suspension and performance work, done to spec and explained in plain
-              language. You see what we found, what it costs and why, before anyone picks up a spanner.
+              Choose a symptom to see possible causes, the urgency and the service that fits,
+              then takes you to a booking with the details already filled in.
             </p>
-            <div className="btn-row">
-              <BookLink className="btn btn--primary">Book a service</BookLink>
-              <Link prefetch={false} href="/#diagnose" className="btn btn--ghost">
-                Not sure what is wrong?
-              </Link>
-            </div>
-            <ul className="promises" aria-label="How we work">
-              {promises.map((p) => (
-                <li key={p}>{p}</li>
-              ))}
-            </ul>
           </div>
-          <HeroArt />
+          <Diagnostics
+            items={symptoms.map(({ id, label, hint }) => ({ id, label, hint }))}
+            panels={Object.fromEntries(symptoms.map((s) => [s.id, <Readout key={s.id} symptom={s} />]))}
+          />
         </div>
       </section>
 
@@ -43,7 +44,7 @@ export default function Home() {
           <div className="section-head">
             <p className="eyebrow">What we do</p>
             <h2 id="services-title" className="h-display h-display--lg">
-              Five jobs, done properly.
+              Workshop services.
             </h2>
             <p className="lead">
               We keep the list short so we can be good at it. If it is outside what we do, we will say so and point you
@@ -51,49 +52,12 @@ export default function Home() {
             </p>
           </div>
           <ul className="service-grid">
-            {services.map((s, i) => (
-              <li key={s.id} className="service-card">
-                <span className="service-card__num" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3>{s.name}</h3>
-                <p>{s.summary}</p>
-                <ul className="ticks">
-                  {s.points.map((pt) => (
-                    <li key={pt}>{pt}</li>
-                  ))}
-                </ul>
-                <div className="service-card__foot">
-                  <p className="service-card__price">
-                    From <strong>{s.from}</strong>
-                    <span>{s.fromNote}</span>
-                  </p>
-                  <BookLink service={s.id} className="text-link">
-                    Book <span className="sr-only">{s.name}</span>
-                  </BookLink>
-                </div>
-              </li>
-            ))}
+            {services.map((service, i) => <li key={service.id} className="service-card">
+              <span className="service-card__num">{String(i + 1).padStart(2, "0")}</span>
+              <div><h3>{service.name}</h3><p>{service.summary}</p><details className="service-detail"><summary>What is included</summary><ul>{service.points.map(point => <li key={point}>{point}</li>)}</ul></details></div>
+              <div className="service-card__foot"><p className="service-card__price">From <strong>{service.from}</strong><span>{service.fromNote}</span></p><BookLink service={service.id} className="text-link">Book <span className="sr-only">{service.name}</span></BookLink></div>
+            </li>)}
           </ul>
-        </div>
-      </section>
-
-      <section id="diagnose" className="section section--defer theme-slate" aria-labelledby="diagnose-title">
-        <div className="container">
-          <div className="section-head">
-            <p className="eyebrow">Diagnostics panel</p>
-            <h2 id="diagnose-title" className="h-display h-display--lg">
-              Tell us the symptom. See the likely causes.
-            </h2>
-            <p className="lead">
-              Pick what you are noticing. The panel lists the usual causes, how urgent it is and the service that fits,
-              then takes you to a booking with the details already filled in.
-            </p>
-          </div>
-          <Diagnostics
-            items={symptoms.map(({ id, label, hint }) => ({ id, label, hint }))}
-            panels={Object.fromEntries(symptoms.map((s) => [s.id, <Readout key={s.id} symptom={s} />]))}
-          />
         </div>
       </section>
 
@@ -152,7 +116,7 @@ export default function Home() {
               Request a time.
             </h2>
             <p className="lead">
-              Tell us about the car and what is going on. A real workshop would come back with a time and a rough quote.
+              Tell us about the car and what is going on. Choose a service and your preferred day.
             </p>
             <ul className="ticks">
               <li>No payment taken online</li>
@@ -203,9 +167,10 @@ export default function Home() {
             </p>
             <p className="visit-note">Invented contact details. Nobody will answer.</p>
           </div>
-          <SiteMap />
+          <div className="location-type" aria-hidden="true">SLATE<br />PISTON<span>WELSHPOOL / WA</span></div>
         </div>
       </section>
     </>
   );
 }
+
