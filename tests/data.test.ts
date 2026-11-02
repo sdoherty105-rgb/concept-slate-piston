@@ -11,14 +11,19 @@ const ratio = (a: string, b: string) => {
 };
 
 const c = {
-  graphite: "#141719",
-  slate: "#343C42",
-  off: "#F0F1EF",
-  orange: "#F07836",
-  steelLight: "#A3ACB1",
-  steelDark: "#4F585E",
-  orangeInk: "#B8470F",
-  mutedOnSlate: "#C3CACD",
+  carbon: "#0E1114",
+  panel: "#161B20",
+  ink: "#E8EDF0",
+  lime: "#C6F135",
+  amber: "#FFB224",
+  field: "#24303A",
+  muted: "#A8B3BA",
+  day: "#E4E9ED",
+  dayPanel: "#F7F9FB",
+  dayInk: "#0E1114",
+  dayMuted: "#3A4550",
+  dayAmber: "#8A5A00",
+  white: "#FFFFFF",
 };
 
 describe("content data", () => {
@@ -44,16 +49,22 @@ describe("content data", () => {
 
 describe("palette contrast (WCAG AA)", () => {
   const text: [string, string, string][] = [
-    ["off on graphite", c.off, c.graphite],
-    ["off on slate", c.off, c.slate],
-    ["graphite on off", c.graphite, c.off],
-    ["orange on graphite", c.orange, c.graphite],
-    ["graphite on orange (buttons)", c.graphite, c.orange],
-    ["steel-light on graphite", c.steelLight, c.graphite],
-    ["steel-light on slate", c.steelLight, c.slate],
-    ["muted on slate", c.mutedOnSlate, c.slate],
-    ["steel-dark on off", c.steelDark, c.off],
-    ["orange-ink on off", c.orangeInk, c.off],
+    ["ink on carbon", c.ink, c.carbon],
+    ["ink on panel", c.ink, c.panel],
+    ["ink on field", c.ink, c.field],
+    ["lime on carbon", c.lime, c.carbon],
+    ["carbon on lime", c.carbon, c.lime],
+    ["amber on carbon", c.amber, c.carbon],
+    ["amber on panel", c.amber, c.panel],
+    ["muted on carbon", c.muted, c.carbon],
+    ["muted on panel", c.muted, c.panel],
+    ["day ink on day ground", c.dayInk, c.day],
+    ["day ink on day panel", c.dayInk, c.dayPanel],
+    ["day ink on white field", c.dayInk, c.white],
+    ["day muted on day ground", c.dayMuted, c.day],
+    ["day muted on day panel", c.dayMuted, c.dayPanel],
+    ["day amber on day ground", c.dayAmber, c.day],
+    ["day amber on day panel", c.dayAmber, c.dayPanel],
   ];
   for (const [name, fg, bg] of text) {
     it(`${name} is at least 4.5:1`, () => {

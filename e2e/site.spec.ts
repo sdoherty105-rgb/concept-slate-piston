@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
-const pages = ["/", "/pricing", "/this-page-does-not-exist"];
+const pages = ["/", "/prices", "/book", "/services/brakes", "/services/general", "/this-page-does-not-exist"];
 const CONCEPT_URL = "https://offshiftstudio.com.au/concepts/slate-piston";
 
 for (const path of pages) {
@@ -43,50 +43,60 @@ test("robots.txt disallows everything", async ({ request }) => {
   expect(body).not.toMatch(/Allow: \//);
 });
 
-test("home page has every required section", async ({ page }) => {
+test("home is a console, not a card grid", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText(/under the bonnet/i);
-  for (const id of ["services", "diagnose", "how-it-works", "pricing", "book", "visit"]) {
-    await expect(page.locator(`section#${id}`)).toHaveCount(1);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(/what the car is doing/i);
+  const layouts = await page.locator("[data-layout]").evaluateAll((els) => els.map((e) => e.getAttribute("data-layout")));
+  expect(layouts).toEqual(["console", "orthographic", "spec-sheet", "price-table", "job-track", "bay-grid", "floor-plan"]);
+  await expect(page.locator(".sheet")).toHaveCount(6);
+  await expect(page.locator(".tracker li")).toHaveCount(4);
+  await expect(page.locator(".service-card")).toHaveCount(0);
+  await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
+});
+
+test("concept label is inside the first viewport at 390 and 1440", async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto("/");
+    const box = await page.getByTestId("concept-label").boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.y + box!.height).toBeLessThan(800);
   }
-  await expect(page.locator("#services .service-card")).toHaveCount(5);
-  await expect(page.locator("#how-it-works .step")).toHaveCount(4);
 });
 
 async function pickSymptom(page: Page, name: RegExp) {
   await page.getByRole("radio", { name }).click();
 }
 
-test("diagnostics panel shows causes and leads to a pre-filled booking", async ({ page }) => {
+test("symptom gauge names a cause and leads to a pre-filled booking", async ({ page }) => {
   await page.goto("/");
   const result = page.getByTestId("dx-result");
   await expect(result).toContainText("Pick a symptom to start");
 
-  await pickSymptom(page, /squeal or grind when braking/i);
+  await pickSymptom(page, /squealing when i brake/i);
   await expect(result).toContainText("Worn brake pads");
   await expect(result).toContainText("Brakes");
   await result.getByRole("link", { name: /book a brakes inspection/i }).click();
 
-  await expect(page).toHaveURL(/#book$/);
+  await expect(page).toHaveURL(/\/book$/);
   await expect(page.locator("#f-service")).toHaveValue("brakes");
-  await expect(page.locator("#f-notes")).toHaveValue(/Squeal or grind when braking/);
+  await expect(page.locator("#f-notes")).toHaveValue(/Squealing when I brake/);
 });
 
-test("every symptom is selectable by keyboard and maps to a service", async ({ page }) => {
+test("every console symptom is selectable by keyboard and maps to a service", async ({ page }) => {
   await page.goto("/");
-  const radios = page.getByRole("radio");
-  const count = await radios.count();
-  expect(count).toBeGreaterThanOrEqual(6);
+  const radios = page.locator("#diagnose .symptom input");
+  await expect(radios).toHaveCount(6);
   await radios.first().focus();
   await page.keyboard.press("Space");
-  for (let i = 1; i < count; i++) {
+  for (let i = 1; i < 6; i++) {
     await page.keyboard.press("ArrowDown");
     await expect(page.getByTestId("dx-result").getByRole("link", { name: /^Book a .* inspection$/ })).toBeVisible();
   }
 });
 
 test("booking form validates on the client", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/book");
   const form = page.getByTestId("booking-form");
   await expect(form.getByRole("button", { name: /request a booking/i })).toBeEnabled();
   await form.getByRole("button", { name: /request a booking/i }).click();
@@ -96,7 +106,7 @@ test("booking form validates on the client", async ({ page }) => {
 });
 
 test("booking form shows a demo success state and never makes a network request", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/book");
   await page.waitForLoadState("networkidle");
   const origin = new URL(page.url()).origin;
   const marker = "Test Driver";
@@ -104,18 +114,12 @@ test("booking form shows a demo success state and never makes a network request"
   const requests: { method: string; url: string; body: string | null; type: string }[] = [];
   page.on("request", (r) => requests.push({ method: r.method(), url: r.url(), body: r.postData(), type: r.resourceType() }));
 
-  const nextSat = new Date();
-  nextSat.setDate(nextSat.getDate() + ((6 - nextSat.getDay() + 7) % 7 || 7));
-  const pad = (n: number) => String(n).padStart(2, "0");
-  const iso = `${nextSat.getFullYear()}-${pad(nextSat.getMonth() + 1)}-${pad(nextSat.getDate())}`;
-
+  await page.locator(".slot input[type=radio]").first().check();
   await page.fill("#f-name", marker);
   await page.fill("#f-phone", "0400 000 000");
   await page.fill("#f-email", "test@example.com");
   await page.fill("#f-vehicle", "2016 Mazda 3");
   await page.selectOption("#f-service", "logbook");
-  await page.fill("#f-date", iso);
-  await page.selectOption("#f-window", "early");
   requests.length = 0;
   await page.getByRole("button", { name: /request a booking/i }).click();
 
@@ -138,34 +142,86 @@ test("form has no action endpoint and the page makes no third-party requests", a
   const external: string[] = [];
   page.on("request", (r) => {
     const u = new URL(r.url());
-    if (u.origin !== new URL(baseURL!).origin && !r.url().startsWith("data:")) {
-      external.push(r.url());
-    }
+    if (u.origin !== new URL(baseURL!).origin && !r.url().startsWith("data:")) external.push(r.url());
   });
-  await page.goto("/");
+  await page.goto("/book");
   await page.waitForLoadState("networkidle");
   const form = page.getByTestId("booking-form");
   expect(await form.getAttribute("action")).toBeNull();
   expect(external).toEqual([]);
 });
 
+function contrast(fg: number[], bg: number[]) {
+  const lin = (v: number) => {
+    const c = v / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  };
+  const L = (rgb: number[]) => 0.2126 * lin(rgb[0]) + 0.7152 * lin(rgb[1]) + 0.0722 * lin(rgb[2]);
+  const [a, b] = [L(fg), L(bg)];
+  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+}
+
+async function pair(page: Page, selector: string) {
+  return page.locator(selector).evaluate((el) => {
+    const parse = (color: string) => {
+      const m = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+      if (!m) return null;
+      return { rgb: [Number(m[1]), Number(m[2]), Number(m[3])], a: m[4] === undefined ? 1 : Number(m[4]) };
+    };
+    const fg = parse(getComputedStyle(el).color);
+    let node: Element | null = el;
+    let bg: { rgb: number[]; a: number } | null = null;
+    while (node) {
+      const candidate = parse(getComputedStyle(node).backgroundColor);
+      if (candidate && candidate.a > 0.9) {
+        bg = candidate;
+        break;
+      }
+      node = node.parentElement;
+    }
+    return { fg: fg?.rgb ?? [0, 0, 0], bg: bg?.rgb ?? [255, 255, 255] };
+  });
+}
+
+test("booking labels and inputs stay visible in carbon and daylight", async ({ page }) => {
+  await page.goto("/book");
+  for (const mode of ["carbon", "day"] as const) {
+    if (mode === "day") await page.getByRole("button", { name: /daylight/i }).click();
+    const label = await pair(page, "label[for='f-name']");
+    const input = await pair(page, "#f-name");
+    expect(contrast(label.fg, label.bg), `${mode} label`).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(input.fg, input.bg), `${mode} input`).toBeGreaterThanOrEqual(4.5);
+    const inputBorder = await page.locator("#f-name").evaluate((el) => getComputedStyle(el).borderTopColor);
+    expect(inputBorder).not.toBe("rgba(0, 0, 0, 0)");
+  }
+});
+
 test.describe("without JavaScript", () => {
   test.use({ javaScriptEnabled: false });
 
-  test("content stays readable and every symptom is listed", async ({ page }) => {
+  test("content stays readable and every console symptom is listed", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/under the bonnet/i);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(/what the car is doing/i);
     await expect(page.locator("#diagnose")).toContainText("Worn brake pads");
     await expect(page.locator("#diagnose")).toContainText("Faulty oxygen or emissions sensor");
-    await expect(page.locator("#pricing")).toContainText("$229");
-    await expect(page.locator("#visit")).toContainText("Welshpool");
+    await expect(page.locator("#prices")).toContainText("$229");
+    await expect(page.locator("#workshop")).toContainText("Welshpool");
+    await expect(page.getByRole("link", { name: "Squealing when I brake" })).toHaveAttribute("href", "/services/brakes");
     await expect(page.getByTestId("concept-label")).toBeVisible();
   });
 });
 
-test("pricing page shows every service group", async ({ page }) => {
-  await page.goto("/pricing");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText(/priced in the open/i);
+test("prices page shows every service group", async ({ page }) => {
+  await page.goto("/prices");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(/fixed price/i);
   await expect(page.locator(".price-group")).toHaveCount(5);
+  await expect(page.getByText(/demonstration price/i).first()).toBeVisible();
 });
 
+test("brake sheet is a specification, with the one render", async ({ page }) => {
+  await page.goto("/services/brakes");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(/brake inspection/i);
+  await expect(page.locator(".checks li")).toHaveCount(6);
+  await expect(page.locator(".render img")).toHaveCount(1);
+  await expect(page.getByText(/demonstration band/i)).toBeVisible();
+});

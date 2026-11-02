@@ -1,19 +1,25 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { BookingProvider } from "@/components/booking-context";
-import { ConceptBanner } from "@/components/concept-banner";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
+import { Shell } from "@/components/shell";
 import "./globals.css";
-import "./workshop.css";
 
-const display = localFont({
-  src: "./fonts/SpaceGrotesk-Variable.woff2",
-  weight: "400 700",
-  variable: "--font-display",
+const label = localFont({
+  src: "./fonts/BarlowSemiCondensed-600.woff2",
+  weight: "600",
+  variable: "--font-label",
   display: "swap",
-  preload: true,
-  fallback: ["system-ui", "Arial", "sans-serif"],
+  preload: false,
+  fallback: ["Arial Narrow", "Arial", "sans-serif"],
+});
+
+const mono = localFont({
+  src: "./fonts/IBMPlexMono-500.woff2",
+  weight: "500",
+  variable: "--font-mono",
+  display: "swap",
+  preload: false,
+  fallback: ["ui-monospace", "monospace"],
 });
 
 const body = localFont({
@@ -23,45 +29,42 @@ const body = localFont({
   ],
   variable: "--font-body",
   display: "swap",
-  preload: false,
+  preload: true,
   fallback: ["system-ui", "Arial", "sans-serif"],
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Slate Piston — Independent automotive workshop, Welshpool WA",
+    default: "Slate Piston — Workshop console, Welshpool WA",
     template: "%s | Slate Piston",
   },
   description:
-    "Logbook servicing, diagnostics, brakes, suspension and performance work, quoted in writing and explained in plain language. A fictional concept by OFF/SHIFT Studio.",
+    "A fictional independent workshop console. Tell us what the car is doing, read a fixed price band, and choose a demonstration bay. An OFF/SHIFT Studio concept.",
   robots: { index: false, follow: false, nocache: true },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#141719",
+  themeColor: "#0E1114",
   colorScheme: "dark",
 };
 
-const jsFlag = "document.documentElement.classList.add('js')";
+const boot = "document.documentElement.classList.add('js');try{if(localStorage.getItem('slate-theme')==='day')document.documentElement.dataset.theme='day'}catch(e){}";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const nowIso = new Date().toISOString();
   return (
-    <html lang="en-AU" className={`${display.variable} ${body.variable}`} suppressHydrationWarning>
+    <html lang="en-AU" className={`${label.variable} ${mono.variable} ${body.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: jsFlag }} />
+        <script dangerouslySetInnerHTML={{ __html: boot }} />
       </head>
       <body>
         <a href="#main" className="skip-link">
           Skip to content
         </a>
-        <ConceptBanner />
         <BookingProvider>
-          <Header />
-          <main id="main">{children}</main>
+          <Shell nowIso={nowIso}>{children}</Shell>
         </BookingProvider>
-        <Footer />
       </body>
     </html>
   );
 }
-

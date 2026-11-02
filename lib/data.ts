@@ -338,6 +338,68 @@ export const symptoms: Symptom[] = [
     service: "logbook",
     bookingNote: "Service due or history unknown",
   },
+  {
+    id: "no-start",
+    label: "Will not start",
+    hint: "No start",
+    urgency: "stop",
+    urgencyNote: "If the car is in a driveway it can wait. If it dies in traffic, stop and call. Do not keep cranking.",
+    causesHeading: "Likely causes, most common first",
+    causes: [
+      {
+        title: "Flat or failing battery",
+        detail: "A slow crank or a click is usually voltage, not the starter itself.",
+      },
+      {
+        title: "Starter or connection fault",
+        detail: "A single click with lights still bright points at the starter circuit.",
+      },
+      {
+        title: "No fuel or no spark",
+        detail: "The engine turns but never fires. Fuel pressure or ignition has to be measured, not guessed.",
+      },
+      {
+        title: "Immobiliser or key fault",
+        detail: "A key the car does not recognise will crank, or refuse to crank, and set a security light.",
+      },
+    ],
+    checks: "Battery voltage under crank, starter draw, fuel pressure, spark or injector pulse, and key status.",
+    service: "diagnostics",
+    bookingNote: "Will not start",
+  },
+  {
+    id: "other",
+    label: "Something else",
+    hint: "Other",
+    urgency: "routine",
+    urgencyNote: "Tell us what you notice in ordinary words. If it feels unsafe, do not drive it in.",
+    causesHeading: "How we narrow it down",
+    causes: [
+      {
+        title: "A noise you can point at",
+        detail: "Where it comes from, and whether it changes with speed or with the pedal, decides the first test.",
+      },
+      {
+        title: "A leak or a smell",
+        detail: "Oil, coolant and fuel leave different traces. We identify the fluid before we quote a repair.",
+      },
+      {
+        title: "A feeling through the wheel or the seat",
+        detail: "A vibration, a pull or a hesitation each has its own short list of checks.",
+      },
+      {
+        title: "Something we should see on the hoist",
+        detail: "If you cannot name it, the inspection is the right first job. We write down what we find.",
+      },
+    ],
+    checks: "A road test where it is safe, a scan, and a hoist inspection of brakes, tyres and fluids.",
+    service: "diagnostics",
+    alsoRelevant: {
+      service: "logbook",
+      note: "If the car is also overdue, we can do the service in the same visit.",
+    },
+    bookingNote: "Something else",
+  },
 ];
 
 export type PriceRow = {
@@ -509,9 +571,125 @@ export const promises = [
 ];
 
 export const navLinks = [
-  { href: "/#services", label: "Services" },
   { href: "/#diagnose", label: "Diagnose" },
-  { href: "/#how-it-works", label: "How a job works" },
-  { href: "/#pricing", label: "Pricing" },
-  { href: "/#visit", label: "Visit" },
+  { href: "/#services", label: "Services" },
+  { href: "/prices", label: "Prices" },
+  { href: "/book", label: "Book" },
+  { href: "/#workshop", label: "Workshop" },
 ];
+
+/** Six plain-language entries for the console. Severity is a demonstration scale, 0 to 100. */
+export const consoleSymptoms: { id: string; label: string; severity: number }[] = [
+  { id: "brake-noise", label: "Squealing when I brake", severity: 74 },
+  { id: "no-start", label: "Will not start", severity: 92 },
+  { id: "warning-light", label: "Warning light on", severity: 61 },
+  { id: "pulling", label: "Pulls to one side", severity: 56 },
+  { id: "service-due", label: "Overdue for a service", severity: 18 },
+  { id: "other", label: "Something else", severity: 40 },
+];
+
+export type Sheet = {
+  slug: string;
+  code: string;
+  symptomId: string;
+  title: string;
+  lede: string;
+  checks: string[];
+};
+
+export const sheets: Sheet[] = [
+  {
+    slug: "brakes",
+    code: "SP-BRK",
+    symptomId: "brake-noise",
+    title: "Brake inspection",
+    lede: "We measure the friction material and the discs, then tell you what is left in millimetres.",
+    checks: [
+      "Pad thickness on each wheel, recorded in millimetres",
+      "Rotor thickness against the stamped minimum",
+      "Rotor runout, the wobble that pulses the pedal",
+      "Caliper slide pins cleaned, measured and greased",
+      "Brake fluid moisture, before any flush is quoted",
+      "Road test, including one stop from 60 km/h",
+    ],
+  },
+  {
+    slug: "no-start",
+    code: "SP-NST",
+    symptomId: "no-start",
+    title: "No-start inspection",
+    lede: "Cranks, clicks, or silence. Each one has a different first measurement.",
+    checks: [
+      "Voltage at rest and while cranking",
+      "Starter draw, so a weak battery is not blamed on the starter",
+      "Fuel pressure at the rail",
+      "Spark or injector pulse, whichever the engine uses",
+      "Key and immobiliser status",
+      "A written fault report, whether we find a code or not",
+    ],
+  },
+  {
+    slug: "warning-light",
+    code: "SP-WRN",
+    symptomId: "warning-light",
+    title: "Warning-light inspection",
+    lede: "A stored code is a clue. The inspection is the test that proves it.",
+    checks: [
+      "Full scan with live data, not only the stored code",
+      "Freeze-frame: what the engine was doing when the light came on",
+      "The single test that proves or rules out the top suspect",
+      "Charging voltage, because low voltage sets unrelated lights",
+      "A written report in plain language",
+      "The scan fee credited if you approve the repair within 7 days",
+    ],
+  },
+  {
+    slug: "pull",
+    code: "SP-PLL",
+    symptomId: "pulling",
+    title: "Pull and alignment inspection",
+    lede: "A car that wanders is dragging on one side. We find which side, then why.",
+    checks: [
+      "Tyre pressures and the wear pattern on each edge",
+      "Brake drag, with a temperature check after a short drive",
+      "Play in joints and bushes, checked on the hoist",
+      "Four-wheel alignment reading against the manufacturer spec",
+      "Before-and-after printout if we adjust it",
+      "A note if the pull is a tyre, not the alignment",
+    ],
+  },
+  {
+    slug: "logbook",
+    code: "SP-LOG",
+    symptomId: "service-due",
+    title: "Logbook service",
+    lede: "The manufacturer schedule, item by item. Nothing extra without a yes.",
+    checks: [
+      "Oil and filter to the grade your schedule names",
+      "The filters, plugs and fluids actually due at this interval",
+      "Fluid levels, with a photo of anything low",
+      "Brake measurement, recorded even when no work is due",
+      "A 40-point inspection list, ticked and filed",
+      "The service record updated, and a copy for you",
+    ],
+  },
+  {
+    slug: "general",
+    code: "SP-GEN",
+    symptomId: "other",
+    title: "General inspection",
+    lede: "For the fault that does not fit a button. You leave with a list, not a shrug.",
+    checks: [
+      "Your description, written back to you so we agree on the symptom",
+      "A road test when it is safe to drive",
+      "A scan for stored and pending faults",
+      "Brakes, tyres and fluids checked and measured",
+      "Findings ranked: fix now, fix soon, or watch",
+      "A fixed inspection price. Parts appear only on the quote",
+    ],
+  },
+];
+
+export const sheetBySlug = (slug: string) => sheets.find((s) => s.slug === slug);
+
+export const symptomById = (id: string) => symptoms.find((s) => s.id === id);
