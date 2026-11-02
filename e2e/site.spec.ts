@@ -52,6 +52,7 @@ test("home is a console, not a card grid", async ({ page }) => {
   await expect(page.locator(".tracker li")).toHaveCount(4);
   await expect(page.locator(".service-card")).toHaveCount(0);
   await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
+  await expect(page.getByText("Demo clock")).toBeVisible();
 });
 
 test("concept label is inside the first viewport at 390 and 1440", async ({ page }) => {
@@ -65,7 +66,7 @@ test("concept label is inside the first viewport at 390 and 1440", async ({ page
 });
 
 async function pickSymptom(page: Page, name: RegExp) {
-  await page.getByRole("radio", { name }).click();
+  await page.locator(".symptom").filter({ hasText: name }).locator("label").click();
 }
 
 test("symptom gauge names a cause and leads to a pre-filled booking", async ({ page }) => {
@@ -114,7 +115,7 @@ test("booking form shows a demo success state and never makes a network request"
   const requests: { method: string; url: string; body: string | null; type: string }[] = [];
   page.on("request", (r) => requests.push({ method: r.method(), url: r.url(), body: r.postData(), type: r.resourceType() }));
 
-  await page.locator(".slot input[type=radio]").first().check();
+  await page.locator(".slot label").first().click();
   await page.fill("#f-name", marker);
   await page.fill("#f-phone", "0400 000 000");
   await page.fill("#f-email", "test@example.com");

@@ -40,6 +40,7 @@ export function StatusBar({ initialIso }: { initialIso: string }) {
           <span className="kicker">Open until</span>
           <strong className="num">{status.openUntil}</strong>
         </p>
+        <p className="status__clock">Demo clock</p>
       </div>
       <p className="status__demo">Demonstration data</p>
       <DaylightToggle />

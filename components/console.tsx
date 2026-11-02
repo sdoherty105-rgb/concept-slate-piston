@@ -140,10 +140,10 @@ export function Console({ items, nextBay, children }: { items: ConsoleItem[]; ne
               <line x1="100" y1="108" x2="100" y2="42" stroke={current?.attention ? "#FFB224" : "#C6F135"} strokeWidth="2" />
               <circle cx="100" cy="108" r="3.5" fill={current?.attention ? "#FFB224" : "#C6F135"} />
             </g>
-            <text x="30" y="150" fill="currentColor" fontSize="8" fontFamily="ui-monospace, monospace">
+            <text x="24" y="156" fill="currentColor" fontSize="12" fontFamily="ui-monospace, monospace">
               LOW
             </text>
-            <text x="148" y="150" fill="currentColor" fontSize="8" fontFamily="ui-monospace, monospace">
+            <text x="140" y="156" fill="currentColor" fontSize="12" fontFamily="ui-monospace, monospace">
               HIGH
             </text>
           </svg>

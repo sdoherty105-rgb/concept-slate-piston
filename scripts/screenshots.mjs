@@ -38,7 +38,7 @@ for (const s of sizes) {
     await page.screenshot({ path: `${out}/${p.name}-${s.name}.png`, fullPage: true });
   }
   await page.goto(base + "/", { waitUntil: "networkidle" });
-  await page.getByRole("radio", { name: /squealing when i brake/i }).click();
+  await page.locator(".symptom").filter({ hasText: /squealing when i brake/i }).locator("label").click();
   await page.screenshot({ path: `${out}/home-symptom-${s.name}.png`, fullPage: false });
   await page.getByRole("button", { name: /daylight/i }).click();
   await page.screenshot({ path: `${out}/home-daylight-${s.name}.png`, fullPage: false });
