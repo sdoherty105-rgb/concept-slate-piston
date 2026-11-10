@@ -26,6 +26,11 @@ export function SpecSheets() {
                     </li>
                   ))}
                 </ol>
+                {sheet.checks.length > 3 && (
+                  <p className="sheet__more" aria-hidden="true">
+                    +{sheet.checks.length - 3} more checks on the full sheet
+                  </p>
+                )}
               </div>
               <div className="sheet__side">
                 <p className="kicker">Fixed price band</p>
