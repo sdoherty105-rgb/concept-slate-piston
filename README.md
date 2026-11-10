@@ -3,7 +3,7 @@
 **An OFF/SHIFT concept — fictional demonstration.** Slate Piston is an invented independent automotive workshop in Welshpool, Perth. This repo holds the concept website. It is not a real business, it was not built for a client, and nothing here has been sold or delivered.
 
 - Concept page: https://offshiftstudio.com.au/concepts/slate-piston
-- Planned demo URL (not configured): slate-piston.offshiftstudio.com.au
+- Demo URL: https://slate-piston.offshiftstudio.com.au (live; see Deployment for which build it serves)
 
 ## What it is
 
@@ -25,7 +25,7 @@ A daylight control switches the console to a light ground. The gauge face stays 
 
 ## Hard rules built in
 
-- Concept label on every page, in the status bar, linking to the OFF/SHIFT concept page
+- Concept label on every page, in the status bar, linking to the OFF/SHIFT concept page, with a "Want a website like this?" link to https://offshiftstudio.com.au/?concept=slate-piston#contact. The footer repeats both, and so does the demo booking success screen
 - `noindex, nofollow` in the meta robots tag, in an `X-Robots-Tag` header (`next.config.ts`) and in `robots.txt`
 - The booking form is demo-only
 - No analytics or trackers, and no third-party requests. Fonts are self-hosted
@@ -47,7 +47,14 @@ Playwright needs a browser once: `npx playwright install chromium`. Screenshots 
 
 ## Deployment
 
-Not deployed from this branch, and no domain is configured. `wrangler.jsonc` names the worker `concept-slate-piston`. Do not deploy without an explicit decision. `npm run cf:build` only builds.
+Checked 2026-11-10:
+
+- https://slate-piston.offshiftstudio.com.au is served by the Cloudflare Worker `concept-slate-piston` (see `wrangler.jsonc`). It currently serves the **older `main` design, commit `effcddc`** (PR #2, "blue workshop identity"). The Worker was last deployed on 2026-10-25 at 14:26 UTC, ten minutes after that merge.
+- The workshop-console redesign lives on `redesign/2026-11` (draft PR #3) and is **not live yet**.
+- Deploys are manual. CI (`.github/workflows/ci.yml`) only lints, tests, builds and runs `npm run cf:build`. It never runs `wrangler deploy`. Pushes to `redesign/2026-11` on 2026-11-02 left the live Worker unchanged.
+- To ship the redesign, the owner merges PR #3 and runs `npm run cf:build && npx wrangler deploy` from `main`. Do not deploy from a feature branch.
+
+The site is `noindex, nofollow` (meta, `X-Robots-Tag` and `robots.txt`) and stays that way when live.
 
 ## Design notes
 
