@@ -52,7 +52,7 @@ test("home is a console, not a card grid", async ({ page }) => {
   await expect(page.locator(".tracker li")).toHaveCount(4);
   await expect(page.locator(".service-card")).toHaveCount(0);
   await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
-  await expect(page.getByText("Demo clock")).toBeVisible();
+  await expect(page.getByText("Demo data, Perth clock")).toBeVisible();
 });
 
 test("concept label is inside the first viewport at 390 and 1440", async ({ page }) => {
@@ -225,4 +225,57 @@ test("brake sheet is a specification, with the one render", async ({ page }) => 
   await expect(page.locator(".checks li")).toHaveCount(6);
   await expect(page.locator(".render img")).toHaveCount(1);
   await expect(page.getByText(/demonstration band/i)).toBeVisible();
+});
+
+test.describe("OFF/SHIFT showroom links", () => {
+  const ENQUIRY = "https://offshiftstudio.com.au/?concept=slate-piston#contact";
+  for (const path of ["/", "/book", "/prices", "/services/brakes"]) {
+    test(`${path} has the enquiry CTA, the return link and the disclosure`, async ({ page }) => {
+      await page.goto(path);
+      const cta = page.getByTestId("studio-cta");
+      await expect(cta).toBeVisible();
+      await expect(cta).toHaveText("Want a website like this?");
+      await expect(cta).toHaveAttribute("href", ENQUIRY);
+      const foot = page.getByRole("contentinfo");
+      await expect(foot.getByRole("link", { name: "Start a project with OFF/SHIFT" })).toHaveAttribute("href", ENQUIRY);
+      await expect(foot.getByRole("link", { name: "Back to the concept page" })).toHaveAttribute("href", CONCEPT_URL);
+      await expect(foot).toContainText("Slate Piston is not a real business");
+    });
+  }
+});
+
+test.describe("mobile 390", () => {
+  test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+
+  test("no horizontal overflow at 390 or 320, and the CTA is in the first screen", async ({ page }) => {
+    for (const width of [390, 320]) {
+      await page.setViewportSize({ width, height: 844 });
+      for (const path of ["/", "/book", "/prices", "/services/brakes"]) {
+        await page.goto(path);
+        const sw = await page.evaluate(() => document.documentElement.scrollWidth);
+        expect(sw, `${path} at ${width}`).toBeLessThanOrEqual(width);
+      }
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    const box = await page.getByTestId("studio-cta").boundingBox();
+    expect(box!.y + box!.height).toBeLessThan(844 - 64);
+  });
+
+  test("symptom and bay carry through the summary strip into the booking form", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByTestId("summary-strip")).toHaveCount(0);
+    await pickSymptom(page, /squealing when i brake/i);
+    const strip = page.getByTestId("summary-strip");
+    await expect(strip).toContainText("Squealing when I brake");
+    await page.locator("#schedule .day-picker label").nth(2).click();
+    await page.locator("#schedule .slot label").filter({ visible: true }).first().click();
+    await expect(page.locator("#schedule .scheduler__chosen")).toContainText("Bay");
+    await strip.getByRole("link", { name: "Book" }).click();
+    await expect(page).toHaveURL(/\/book$/);
+    await expect(page.locator("#f-service")).toHaveValue("brakes");
+    // The day picker follows the chosen bay, so the selected cell is on screen.
+    await expect(page.locator(".slot input:checked + label")).toBeVisible();
+    await expect(page.locator(".slot input:checked + label")).toContainText("Selected");
+  });
 });
