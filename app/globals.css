@@ -264,12 +264,12 @@ html[data-theme="day"] .btn-lime:focus-visible { outline-color: #0e1114; }
   line-height: 1.3;
 }
 .concept-label { margin: 0; max-width: 28rem; }
-.concept-label a { color: var(--ink); }
+.concept-label a { color: var(--ink); display: inline-flex; align-items: center; min-height: 24px; }
 .studio__cta {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 24px;
+  min-height: 28px;
   color: var(--ink);
   font-weight: 600;
   text-decoration: underline;
