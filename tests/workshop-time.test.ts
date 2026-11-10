@@ -27,6 +27,14 @@ describe("Perth workshop clock", () => {
     expect(days[0].iso).toBe("2026-11-02");
   });
 
+  it("drops today from the grid once the workshop has closed for the day", () => {
+    // Tuesday 10 Nov 2026, 6:00 pm Perth
+    const days = bookDays(new Date("2026-11-10T10:00:00Z"));
+    expect(days[0].iso).toBe("2026-11-11");
+    // Tuesday 10 Nov 2026, 9:00 am Perth
+    expect(bookDays(new Date("2026-11-10T01:00:00Z"))[0].iso).toBe("2026-11-10");
+  });
+
   it("keeps Bay B free in the demonstration grid", () => {
     for (let day = 0; day < 7; day++) expect(slotTaken(day, 1)).toBe(false);
   });

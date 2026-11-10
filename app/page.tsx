@@ -1,13 +1,12 @@
 import { Console, type ConsoleItem } from "@/components/console";
 import { FloorPlan } from "@/components/floor-plan";
-import { HomeScheduler } from "@/components/home-scheduler";
+import { FreeNow, HomeScheduler } from "@/components/home-scheduler";
 import { JobTracker } from "@/components/job-tracker";
 import { PriceBoard } from "@/components/price-board";
 import { Readout } from "@/components/readout";
 import { SpecSheets } from "@/components/spec-sheets";
 import { VehicleViews } from "@/components/vehicle-views";
 import { consoleSymptoms, serviceById, sheets, symptomById } from "@/lib/data";
-import { bookDays, workshopStatus } from "@/lib/workshop-time";
 
 function bandFor(severity: number) {
   if (severity >= 76) return "Attention";
@@ -17,8 +16,6 @@ function bandFor(severity: number) {
 
 export default function Home() {
   const now = new Date();
-  const status = workshopStatus(now);
-  const days = bookDays(now);
   const items: ConsoleItem[] = consoleSymptoms.map((entry) => {
     const symptom = symptomById(entry.id);
     if (!symptom) throw new Error(entry.id);
@@ -40,7 +37,7 @@ export default function Home() {
   return (
     <>
       <section id="diagnose" data-layout="console" className="block" aria-labelledby="hero-title">
-        <Console items={items} nextBay={status.open ? status.nextSlot : status.nextSlot}>
+        <Console items={items} nowIso={now.toISOString()}>
           <p className="kicker">Diagnose</p>
           <h1 id="hero-title">Tell us what the car is doing</h1>
           <p className="lede">
@@ -82,7 +79,7 @@ export default function Home() {
       <section id="services" data-layout="spec-sheet" className="block" aria-labelledby="sheets-title">
         <div className="section-label">
           <h2 id="sheets-title">Specification sheets</h2>
-          <p>Each job lists the checks we do and a fixed price band. Parts at cost appear only on the quote.</p>
+          <p>Each job lists the checks we do and a fixed price band. Parts at cost appear only on the quote. Every band is a demonstration figure, not a quote.</p>
         </div>
         <SpecSheets />
       </section>
@@ -117,11 +114,11 @@ export default function Home() {
         <div className="panel">
           <div className="panel__bar">
             <h2 id="schedule-title" className="panel__label">Bay scheduler</h2>
-            <p className="panel__value num">{status.freeCount} free now</p>
+            <FreeNow initialIso={now.toISOString()} />
           </div>
           <div className="panel__body">
             <p className="lede">Seven open days, four bays. Choose a free cell. Taken cells are demonstration holds, not real bookings.</p>
-            <HomeScheduler days={days} />
+            <HomeScheduler initialIso={now.toISOString()} />
           </div>
         </div>
       </section>

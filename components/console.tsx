@@ -5,6 +5,7 @@ import type { ServiceId } from "@/lib/data";
 import { workshopStatus } from "@/lib/workshop-time";
 import { BookLink } from "./book-link";
 import { useBooking } from "./booking-context";
+import { useNow } from "./use-now";
 
 export type ConsoleItem = {
   id: string;
@@ -25,17 +26,8 @@ function easeOutBack(t: number) {
   return 1 + c3 * (t - 1) ** 3 + c1 * (t - 1) ** 2;
 }
 
-export function Console({ items, nextBay, children }: { items: ConsoleItem[]; nextBay: string; children?: ReactNode }) {
-  const [bay, setBay] = useState(nextBay);
-  useEffect(() => {
-    const tick = () => setBay(workshopStatus(new Date()).nextSlot);
-    const soon = window.setTimeout(tick, 0);
-    const id = window.setInterval(tick, 60_000);
-    return () => {
-      window.clearTimeout(soon);
-      window.clearInterval(id);
-    };
-  }, []);
+export function Console({ items, nowIso, children }: { items: ConsoleItem[]; nowIso: string; children?: ReactNode }) {
+  const bay = workshopStatus(useNow(nowIso)).nextSlot;
   const [selected, setSelected] = useState<string | null>(null);
   const [shown, setShown] = useState(0);
   const [angle, setAngle] = useState(-120);

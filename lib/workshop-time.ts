@@ -123,8 +123,10 @@ export function workshopStatus(date: Date): WorkshopStatus {
 export function bookDays(date: Date, count = 7): BookDay[] {
   const p = perthNow(date);
   const start = Date.UTC(p.year, p.month - 1, p.day);
+  const mins = p.hour * 60 + p.minute;
+  const closedForToday = (p.weekday === 6 && mins >= 12 * 60) || (p.weekday >= 1 && p.weekday <= 5 && mins >= 17 * 60);
   const out: BookDay[] = [];
-  for (let i = 0; out.length < count && i < 21; i++) {
+  for (let i = closedForToday ? 1 : 0; out.length < count && i < 21; i++) {
     const d = new Date(start + i * 86_400_000);
     const wd = d.getUTCDay();
     if (wd === 0) continue;
