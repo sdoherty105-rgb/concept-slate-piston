@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { serviceById, services, type ServiceId } from "@/lib/data";
+import { serviceById, services, STUDIO_ENQUIRY_URL, type ServiceId } from "@/lib/data";
 import { parseSlot, type BookDay } from "@/lib/workshop-time";
 import { useBooking } from "./booking-context";
 import { Scheduler } from "./scheduler";
@@ -139,9 +139,14 @@ export function BookingForm({
             <dd>{chosen ? `${chosen.bay.name}, ${chosen.label}` : values.slot}</dd>
           </div>
         </dl>
-        <button type="button" className="btn-line" onClick={reset}>
-          Start another demo booking
-        </button>
+        <div className="form-success__actions">
+          <button type="button" className="btn-line" onClick={reset}>
+            Start another demo booking
+          </button>
+          <a className="btn-lime" href={STUDIO_ENQUIRY_URL}>
+            Want a booking flow like this? Talk to OFF/SHIFT
+          </a>
+        </div>
       </div>
     );
   }

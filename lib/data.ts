@@ -1,5 +1,7 @@
 export const CONCEPT_URL = "https://offshiftstudio.com.au/concepts/slate-piston";
 export const CONCEPT_LABEL = "An OFF/SHIFT concept — fictional demonstration";
+export const STUDIO_ENQUIRY_URL = "https://offshiftstudio.com.au/?concept=slate-piston#contact";
+export const STUDIO_CTA = "Want a website like this?";
 
 export const business = {
   name: "Slate Piston",

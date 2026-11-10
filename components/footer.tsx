@@ -1,9 +1,27 @@
 import Link from "next/link";
-import { business, CONCEPT_LABEL, CONCEPT_URL, navLinks } from "@/lib/data";
+import { business, CONCEPT_LABEL, CONCEPT_URL, navLinks, STUDIO_CTA, STUDIO_ENQUIRY_URL } from "@/lib/data";
 
 export function Footer() {
   return (
     <footer className="foot">
+      <section className="foot__studio" aria-labelledby="studio-title">
+        <div>
+          <p className="kicker">OFF/SHIFT Studio, concept 03</p>
+          <h2 id="studio-title">{STUDIO_CTA}</h2>
+          <p>
+            Slate Piston is a made-up workshop. The symptom gauge, bay scheduler and booking flow show what OFF/SHIFT can
+            build for a real one.
+          </p>
+        </div>
+        <div className="foot__studio-links">
+          <a className="btn-lime" href={STUDIO_ENQUIRY_URL}>
+            Start a project with OFF/SHIFT
+          </a>
+          <a className="btn-line" href={CONCEPT_URL}>
+            Back to the concept page
+          </a>
+        </div>
+      </section>
       <div className="foot__grid">
         <div>
           <p className="status__name">Slate Piston</p>

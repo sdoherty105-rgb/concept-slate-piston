@@ -1,25 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CONCEPT_LABEL, CONCEPT_URL } from "@/lib/data";
+import { CONCEPT_LABEL, CONCEPT_URL, STUDIO_CTA, STUDIO_ENQUIRY_URL } from "@/lib/data";
 import { workshopStatus } from "@/lib/workshop-time";
 import { DaylightToggle } from "./daylight-toggle";
+import { useNow } from "./use-now";
 
 export function StatusBar({ initialIso }: { initialIso: string }) {
-  const [iso, setIso] = useState(initialIso);
-
-  useEffect(() => {
-    const tick = () => setIso(new Date().toISOString());
-    const soon = window.setTimeout(tick, 0);
-    const id = window.setInterval(tick, 60_000);
-    return () => {
-      window.clearTimeout(soon);
-      window.clearInterval(id);
-    };
-  }, []);
-
-  const status = workshopStatus(new Date(iso));
+  const status = workshopStatus(useNow(initialIso));
 
   return (
     <header className="status">
@@ -40,13 +28,17 @@ export function StatusBar({ initialIso }: { initialIso: string }) {
           <span className="kicker">Open until</span>
           <strong className="num">{status.openUntil}</strong>
         </p>
-        <p className="status__clock">Demo clock</p>
       </div>
-      <p className="status__demo">Demonstration data</p>
+      <p className="status__demo">Demo data, Perth clock</p>
       <DaylightToggle />
-      <p className="concept-label" data-testid="concept-label">
-        <a href={CONCEPT_URL}>{CONCEPT_LABEL}</a>
-      </p>
+      <div className="studio">
+        <p className="concept-label" data-testid="concept-label">
+          <a href={CONCEPT_URL}>{CONCEPT_LABEL}</a>
+        </p>
+        <a className="studio__cta" href={STUDIO_ENQUIRY_URL} data-testid="studio-cta">
+          {STUDIO_CTA}
+        </a>
+      </div>
     </header>
   );
 }
