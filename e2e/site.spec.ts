@@ -279,3 +279,69 @@ test.describe("mobile 390", () => {
     await expect(page.locator(".slot input:checked + label")).toContainText("Selected");
   });
 });
+
+// Issue #84 quality-gate regressions (S1 to S3).
+test("home mark's accessible name starts with its visible text, SP (S1)", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const mark = page.locator(".rail__mark");
+  await expect(mark).toHaveText("SP");
+  await expect(mark).toHaveAccessibleName(/^SP\b/);
+  await expect(page.getByRole("link", { name: "SP, Slate Piston home" })).toBeVisible();
+});
+
+test.describe("mobile hotspots and focus (S2, S3)", () => {
+  test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+
+  test("vehicle hotspots do not overlap at 320 and 390", async ({ page }) => {
+    for (const width of [320, 390]) {
+      await page.setViewportSize({ width, height: 844 });
+      await page.goto("/");
+      const boxes = await page.locator(".hotspot").evaluateAll((els) =>
+        els.map((e) => {
+          const r = e.getBoundingClientRect();
+          return { n: e.textContent?.slice(0, 2), x: r.x, y: r.y, w: r.width, h: r.height };
+        }),
+      );
+      expect(boxes).toHaveLength(6);
+      for (let i = 0; i < boxes.length; i++) {
+        for (let j = i + 1; j < boxes.length; j++) {
+          const a = boxes[i];
+          const b = boxes[j];
+          const hit = a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+          expect(hit, `${a.n}/${b.n} at ${width}`).toBe(false);
+        }
+      }
+    }
+  });
+
+  async function tabAndCheck(page: Page) {
+    const hidden: string[] = [];
+    for (let i = 0; i < 120; i++) {
+      await page.keyboard.press("Tab");
+      const r = await page.evaluate(() => {
+        const el = document.activeElement as HTMLElement | null;
+        if (!el || el === document.body || el.closest(".tabbar, .summary-strip")) return null;
+        const b = el.getBoundingClientRect();
+        const bars = [...document.querySelectorAll(".tabbar, .summary-strip")].map((n) => n.getBoundingClientRect().top);
+        return { name: (el.getAttribute("aria-label") ?? el.textContent ?? "").trim(), bottom: b.bottom, limit: Math.min(...bars) };
+      });
+      if (r && r.bottom > r.limit + 0.5) hidden.push(`${r.name} (${Math.round(r.bottom)} > ${Math.round(r.limit)})`);
+    }
+    return hidden;
+  }
+
+  test("keyboard focus is never hidden under the fixed tab bar", async ({ page }) => {
+    await page.goto("/");
+    expect(await tabAndCheck(page)).toEqual([]);
+  });
+
+  test("keyboard focus clears the summary strip once a symptom is picked", async ({ page }) => {
+    await page.goto("/");
+    await pickSymptom(page, /squealing when i brake/i);
+    await expect(page.getByTestId("summary-strip")).toBeVisible();
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    await page.evaluate(() => window.scrollTo(0, 0));
+    expect(await tabAndCheck(page)).toEqual([]);
+  });
+});

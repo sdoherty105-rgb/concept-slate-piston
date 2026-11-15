@@ -467,6 +467,12 @@ html[data-theme="day"] .studio__cta { text-decoration-color: var(--ink); }
   text-decoration: none;
   font-size: 12px;
 }
+@media (max-width: 600px) {
+  /* The numbered list below is the large target on phones; small markers keep 01/02 and 03/04 apart. */
+  .hotspot { width: 28px; height: 28px; font-size: 11px; }
+  /* 03 and 04 sit 8% apart; nudge 04 so they stay clear down to 320px. */
+  .hotspot[href="/services/pull"] { margin-left: -8px; }
+}
 .hotlist { display: grid; gap: 0; margin-top: 8px; }
 .hotlist a {
   display: flex;
@@ -764,7 +770,8 @@ html[data-theme="day"] .studio__cta { text-decoration-color: var(--ink); }
   .foot { padding-bottom: 88px; }
   .app:has(.summary-strip) .foot { padding-bottom: 152px; }
   .foot__studio { grid-template-columns: 1fr; padding: 16px; }
-  html { scroll-padding-top: 16px; }
+  html { scroll-padding-top: 16px; scroll-padding-bottom: 88px; }
+  html:has(.summary-strip) { scroll-padding-bottom: 152px; }
   .status__sub { display: none; }
 }
 

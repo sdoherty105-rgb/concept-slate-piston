@@ -68,7 +68,7 @@ export function Rail() {
   return (
     <>
       <nav className="rail" aria-label="Primary">
-        <Link prefetch={false} href="/" className="rail__mark" aria-label="Slate Piston, home">
+        <Link prefetch={false} href="/" className="rail__mark" aria-label="SP, Slate Piston home">
           SP
         </Link>
         <ul>{items}</ul>
