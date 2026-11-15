@@ -345,3 +345,71 @@ test.describe("mobile hotspots and focus (S2, S3)", () => {
     expect(await tabAndCheck(page)).toEqual([]);
   });
 });
+
+// Intermediate widths where the fixed 44px markers used to collide (03/04 at 601-617 and
+// 900-1269, 01/02 at 900-1007). Markers now scale with the drawing (24px floor, 44px cap).
+test.describe("hotspots at intermediate widths", () => {
+  const WIDTHS = [600, 601, 608, 616, 617, 618, 768, 899, 900, 901, 950, 1007, 1008, 1100, 1200, 1268, 1269, 1270, 1440];
+
+  async function boxes(page: Page) {
+    return page.locator(".hotspot").evaluateAll((els) =>
+      els.map((e) => {
+        const r = e.getBoundingClientRect();
+        return { n: e.textContent?.slice(0, 2), x: r.x, y: r.y, w: r.width, h: r.height };
+      }),
+    );
+  }
+
+  test("no two hotspots overlap and every marker is at least 24px", async ({ page }) => {
+    await page.goto("/");
+    for (const width of WIDTHS) {
+      await page.setViewportSize({ width, height: 900 });
+      const b = await boxes(page);
+      expect(b).toHaveLength(6);
+      for (const box of b) expect(box.w, `${box.n} at ${width}`).toBeGreaterThanOrEqual(24);
+      for (let i = 0; i < b.length; i++) {
+        for (let j = i + 1; j < b.length; j++) {
+          const p = b[i];
+          const q = b[j];
+          const hit = p.x < q.x + q.w && q.x < p.x + p.w && p.y < q.y + q.h && q.y < p.y + p.h;
+          expect(hit, `${p.n}/${q.n} at ${width}`).toBe(false);
+        }
+      }
+    }
+  });
+
+  test("markers keep the full 44px where the drawing is wide enough (768 and 1440)", async ({ page }) => {
+    await page.goto("/");
+    for (const width of [768, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const box of await boxes(page)) expect(box.w, `${box.n} at ${width}`).toBe(44);
+    }
+  });
+
+  for (const width of [610, 1000]) {
+    test(`each hotspot is reachable by keyboard, unobscured and opens its sheet at ${width}`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/");
+      const spots = page.locator(".hotspot");
+      const n = await spots.count();
+      for (let i = 0; i < n; i++) {
+        const spot = spots.nth(i);
+        await spot.focus();
+        await expect(spot).toBeFocused();
+        // Nothing else (another marker, the tab bar) sits on top of the focused marker.
+        const onTop = await spot.evaluate((el) => {
+          const r = el.getBoundingClientRect();
+          const hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+          const tabbar = document.querySelector(".tabbar");
+          const bar = tabbar && getComputedStyle(tabbar).display !== "none" ? tabbar.getBoundingClientRect().top : Infinity;
+          return { mine: !!hit && el.contains(hit), clear: r.bottom <= bar };
+        });
+        expect(onTop.mine, `marker ${i + 1} at ${width}`).toBe(true);
+        expect(onTop.clear, `marker ${i + 1} above the tab bar at ${width}`).toBe(true);
+      }
+      const href = await spots.nth(3).getAttribute("href");
+      await spots.nth(3).click();
+      await expect(page).toHaveURL(new RegExp(`${href}$`));
+    });
+  }
+});

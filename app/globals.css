@@ -454,8 +454,12 @@ html[data-theme="day"] .studio__cta { text-decoration-color: var(--ink); }
 .drawing--small svg { height: 92px; width: auto; margin-inline: auto; }
 .hotspot {
   position: absolute;
-  width: 44px;
-  height: 44px;
+  /* Markers 03/04 and 01/02 sit 8-10% of the drawing apart, so a fixed 44px collides
+     whenever the drawing is narrower than about 550px (601-617px and 900-1269px viewports).
+     Scale with the drawing instead, keeping 44px where it fits and 24px as the floor. */
+  width: clamp(24px, 7.5%, 44px);
+  height: auto;
+  aspect-ratio: 1;
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
