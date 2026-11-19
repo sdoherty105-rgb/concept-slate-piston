@@ -19,15 +19,14 @@ export function Readout({ symptom, plainLabel }: { symptom: Symptom; plainLabel?
       <div className="readout__body">
         <section aria-label={symptom.causesHeading}>
           <h4>{symptom.causesHeading}</h4>
-          <ol className="causes">
-            {symptom.causes.map((c, i) => (
+          <ul className="causes">
+            {symptom.causes.map((c) => (
               <li key={c.title}>
-                <span className="num">{String(i + 1).padStart(2, "0")}</span>
                 <strong>{c.title}</strong>
                 <span>{c.detail}</span>
               </li>
             ))}
-          </ol>
+          </ul>
           <p className="readout__checks">
             <strong>What we check. </strong>
             {symptom.checks}

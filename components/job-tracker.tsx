@@ -2,10 +2,15 @@ import { process } from "@/lib/data";
 
 export function JobTracker() {
   return (
-    <ol className="tracker">
-      {process.map((step) => (
+    <ul className="tracker">
+      {process.map((step, i) => (
         <li key={step.step}>
-          <p className="num">{step.step}</p>
+          <span className="stage" aria-hidden="true" style={{ ["--k" as string]: i + 1 }}>
+            <i />
+            <i />
+            <i />
+            <i />
+          </span>
           <h3>{step.title}</h3>
           <p>{step.body}</p>
           <p className="tracker__gives">
@@ -14,6 +19,6 @@ export function JobTracker() {
           </p>
         </li>
       ))}
-    </ol>
+    </ul>
   );
 }

@@ -7,7 +7,7 @@ const KEY = "slate-theme";
 function apply(day: boolean) {
   document.documentElement.dataset.theme = day ? "day" : "carbon";
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute("content", day ? "#E4E9ED" : "#0E1114");
+  if (meta) meta.setAttribute("content", day ? "#DDE8EF" : "#0B1822");
 }
 
 export function DaylightToggle() {

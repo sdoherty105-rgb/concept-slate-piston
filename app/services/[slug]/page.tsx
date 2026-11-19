@@ -32,7 +32,6 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
     <article className="block" data-layout="spec-sheet" aria-labelledby="sheet-title">
       <p className="kicker">
         <Link href="/#services">Services</Link>
-        <span className="num"> {sheet.code}</span>
       </p>
       <h1 id="sheet-title">{sheet.title}</h1>
       <p className="lede">{sheet.lede}</p>
@@ -43,26 +42,24 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             <p className="panel__value num">{service ? `From ${service.from}` : ""}</p>
           </div>
           <div className="panel__body">
-            <ol className="checks">
-              {sheet.checks.map((check, i) => (
+            <ul className="checks">
+              {sheet.checks.map((check) => (
                 <li key={check}>
-                  <span className="num">{String(i + 1).padStart(2, "0")}</span>
                   <span>{check}</span>
                 </li>
               ))}
-            </ol>
+            </ul>
             {symptom && (
               <>
                 <h2 className="subhead">Likely causes</h2>
-                <ol className="causes">
-                  {symptom.causes.map((cause, i) => (
+                <ul className="causes">
+                  {symptom.causes.map((cause) => (
                     <li key={cause.title}>
-                      <span className="num">{String(i + 1).padStart(2, "0")}</span>
                       <strong>{cause.title}</strong>
                       <span>{cause.detail}</span>
                     </li>
                   ))}
-                </ol>
+                </ul>
               </>
             )}
           </div>

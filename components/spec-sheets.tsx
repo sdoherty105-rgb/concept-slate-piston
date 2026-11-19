@@ -3,7 +3,7 @@ import { serviceById, sheets, symptomById } from "@/lib/data";
 
 export function SpecSheets() {
   return (
-    <ol className="sheets">
+    <ul className="sheets">
       {sheets.map((sheet) => {
         const symptom = symptomById(sheet.symptomId);
         const service = symptom ? serviceById(symptom.service) : null;
@@ -11,21 +11,20 @@ export function SpecSheets() {
           <li key={sheet.slug} className="panel sheet">
             <div className="panel__bar">
               <h3 className="panel__label">
-                <span className="num">{sheet.code}</span> {sheet.title}
+                {sheet.title}
               </h3>
               <p className="panel__value num">{service ? `From ${service.from}` : ""}</p>
             </div>
             <div className="panel__body sheet__body">
               <div>
                 <p>{sheet.lede}</p>
-                <ol className="checks">
-                  {sheet.checks.map((check, i) => (
+                <ul className="checks">
+                  {sheet.checks.map((check) => (
                     <li key={check}>
-                      <span className="num">{String(i + 1).padStart(2, "0")}</span>
                       <span>{check}</span>
                     </li>
                   ))}
-                </ol>
+                </ul>
                 {sheet.checks.length > 3 && (
                   <p className="sheet__more" aria-hidden="true">
                     +{sheet.checks.length - 3} more checks on the full sheet
@@ -45,6 +44,6 @@ export function SpecSheets() {
           </li>
         );
       })}
-    </ol>
+    </ul>
   );
 }

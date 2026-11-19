@@ -70,7 +70,7 @@ export default function Home() {
             <p className="panel__value">6 hotspots</p>
           </div>
           <div className="panel__body">
-            <p className="lede">One line weight, four orthographic views. The numbers match the specification sheets. This is not a customer car.</p>
+            <p className="lede">One line weight, four orthographic views. Each cross opens the specification sheet for that job. This is not a customer car.</p>
             <VehicleViews />
           </div>
         </div>

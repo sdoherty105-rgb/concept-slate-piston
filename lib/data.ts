@@ -534,25 +534,25 @@ export const pricing: PriceRow[] = [
 
 export const process = [
   {
-    step: "01",
+    step: "inspect",
     title: "Inspect",
     body: "We look before we talk numbers. The car goes on the hoist, we measure what matters and photograph what we find.",
     gives: "Photos and measurements",
   },
   {
-    step: "02",
+    step: "quote",
     title: "Quote",
     body: "A written, itemised quote by SMS or email. Every line is ranked: fix now, fix soon, or keep an eye on it.",
     gives: "Itemised written quote",
   },
   {
-    step: "03",
+    step: "approve",
     title: "Approve",
     body: "You approve line by line. Nothing starts without a yes from you, and a no is a perfectly good answer.",
     gives: "Your sign-off, line by line",
   },
   {
-    step: "04",
+    step: "repair",
     title: "Repair",
     body: "We do the approved work and nothing else. If we find something new, we stop and ask before touching it.",
     gives: "Old parts back, on request",

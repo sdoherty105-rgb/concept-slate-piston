@@ -141,7 +141,7 @@ export function Console({ items, nowIso, children }: { items: ConsoleItem[]; now
           </svg>
           {current && (
             <p className="gauge__num num" aria-hidden="true">
-              {String(shown).padStart(2, "0")}
+              {shown}
             </p>
           )}
         </div>

@@ -65,12 +65,12 @@ function PlanView() {
 }
 
 const hotspots = [
-  { n: "01", title: "Front brake", sheet: "/services/brakes", x: "25%", y: "74%" },
-  { n: "02", title: "Engine, no start", sheet: "/services/no-start", x: "15%", y: "48%" },
-  { n: "03", title: "Warning lamp", sheet: "/services/warning-light", x: "46%", y: "26%" },
-  { n: "04", title: "Steering pull", sheet: "/services/pull", x: "38%", y: "40%" },
-  { n: "05", title: "Logbook service", sheet: "/services/logbook", x: "55%", y: "58%" },
-  { n: "06", title: "Anything else", sheet: "/services/general", x: "82%", y: "46%" },
+  { n: "brake", title: "Front brake", sheet: "/services/brakes", x: "25%", y: "74%" },
+  { n: "nostart", title: "Engine, no start", sheet: "/services/no-start", x: "15%", y: "48%" },
+  { n: "lamp", title: "Warning lamp", sheet: "/services/warning-light", x: "46%", y: "26%" },
+  { n: "pull", title: "Steering pull", sheet: "/services/pull", x: "38%", y: "40%" },
+  { n: "logbook", title: "Logbook service", sheet: "/services/logbook", x: "55%", y: "58%" },
+  { n: "other", title: "Anything else", sheet: "/services/general", x: "82%", y: "46%" },
 ];
 
 export function VehicleViews() {
@@ -80,22 +80,21 @@ export function VehicleViews() {
         <figure className="drawing">
           <SideView />
           {hotspots.map((h) => (
-            <Link key={h.n} href={h.sheet} className="hotspot" style={{ left: h.x, top: h.y }} prefetch={false}>
-              <span className="num">{h.n}</span>
+            <Link key={h.n} href={h.sheet} className="hotspot" aria-label={h.title} style={{ left: h.x, top: h.y }} prefetch={false}>
+              <span className="hotspot__tip" aria-hidden="true">{h.title}</span>
               <span className="sr-only">{h.title}</span>
             </Link>
           ))}
         </figure>
-        <ol className="hotlist">
+        <ul className="hotlist">
           {hotspots.map((h) => (
             <li key={h.n}>
               <Link href={h.sheet} prefetch={false}>
-                <span className="num">{h.n}</span>
                 {h.title}
               </Link>
             </li>
           ))}
-        </ol>
+        </ul>
       </div>
       <div className="views__rest">
         <figure className="drawing drawing--small">

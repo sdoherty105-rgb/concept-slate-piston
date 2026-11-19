@@ -6,7 +6,7 @@ export function Footer() {
     <footer className="foot">
       <section className="foot__studio" aria-labelledby="studio-title">
         <div>
-          <p className="kicker">OFF/SHIFT Studio, concept 03</p>
+          <p className="kicker">A concept by OFF/SHIFT Studio</p>
           <h2 id="studio-title">{STUDIO_CTA}</h2>
           <p>
             Slate Piston is a made-up workshop. The symptom gauge, bay scheduler and booking flow show what OFF/SHIFT can

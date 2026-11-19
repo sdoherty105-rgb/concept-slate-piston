@@ -11,17 +11,17 @@ const ratio = (a: string, b: string) => {
 };
 
 const c = {
-  carbon: "#0E1114",
-  panel: "#161B20",
+  carbon: "#0B1822",
+  panel: "#122433",
   ink: "#E8EDF0",
   lime: "#C6F135",
   amber: "#FFB224",
-  field: "#24303A",
-  muted: "#A8B3BA",
-  day: "#E4E9ED",
-  dayPanel: "#F7F9FB",
-  dayInk: "#0E1114",
-  dayMuted: "#3A4550",
+  field: "#1B3144",
+  muted: "#9FB7C8",
+  day: "#DDE8EF",
+  dayPanel: "#F6FAFC",
+  dayInk: "#0B1822",
+  dayMuted: "#324A5C",
   dayAmber: "#8A5A00",
   white: "#FFFFFF",
 };
