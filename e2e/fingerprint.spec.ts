@@ -80,6 +80,16 @@ async function scan(page: Page): Promise<Finding[]> {
       const cs = getComputedStyle(el);
       const text = ownText(el);
 
+      // 1a. a standalone 1-3 digit numeral that leads a list item or heading, or sits as its own first child
+      if (text && /^\d{1,3}$/.test(text)) {
+        const parent = el.parentElement;
+        const leads = parent && parent.firstElementChild === el && !!parent.querySelector(":scope > * ~ *, :scope > *");
+        const inItem = !!el.closest("li, h1, h2, h3, h4, a, dt, tr");
+        const decorative = el.getAttribute("aria-hidden") === "true";
+        if ((leads && (inItem || decorative)) && !(el.closest("time, [data-numeric]"))) {
+          out.push({ rule: "numbered-prefix", where: label(el), detail: `standalone numeral ${text}` });
+        }
+      }
       // 1. numbered list prefixes
       if (text && (/^0\d\b/.test(text) || /^\d{1,2}\s*[/.)]\s/.test(text))) {
         out.push({ rule: "numbered-prefix", where: label(el), detail: text.slice(0, 40) });
