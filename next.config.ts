@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  async redirects() {
+    return [{ source: "/pricing", destination: "/prices", permanent: false }];
+  },
   async headers() {
     return [
       {

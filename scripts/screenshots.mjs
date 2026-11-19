@@ -2,7 +2,7 @@ import { chromium } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 
 const base = process.env.BASE_URL ?? "http://localhost:3000";
-const out = "docs/screens";
+const out = "docs/screens/after";
 mkdirSync(out, { recursive: true });
 
 const sizes = [
@@ -12,7 +12,15 @@ const sizes = [
 ];
 const pages = [
   { name: "home", path: "/" },
-  { name: "pricing", path: "/pricing" },
+  { name: "prices", path: "/prices" },
+  { name: "book", path: "/book" },
+  { name: "brakes", path: "/services/brakes" },
+  { name: "no-start", path: "/services/no-start" },
+  { name: "warning-light", path: "/services/warning-light" },
+  { name: "pull", path: "/services/pull" },
+  { name: "logbook", path: "/services/logbook" },
+  { name: "general", path: "/services/general" },
+  { name: "not-found", path: "/this-page-does-not-exist" },
 ];
 
 const browser = await chromium.launch();
@@ -30,8 +38,10 @@ for (const s of sizes) {
     await page.screenshot({ path: `${out}/${p.name}-${s.name}.png`, fullPage: true });
   }
   await page.goto(base + "/", { waitUntil: "networkidle" });
-  await page.getByRole("radio", { name: /squeal or grind when braking/i }).click();
-  await page.locator("#diagnose").screenshot({ path: `${out}/diagnostics-${s.name}.png` });
+  await page.locator(".symptom").filter({ hasText: /squealing when i brake/i }).locator("label").click();
+  await page.screenshot({ path: `${out}/home-symptom-${s.name}.png`, fullPage: false });
+  await page.getByRole("button", { name: /daylight/i }).click();
+  await page.screenshot({ path: `${out}/home-daylight-${s.name}.png`, fullPage: false });
   await ctx.close();
 }
 await browser.close();

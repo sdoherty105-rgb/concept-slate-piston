@@ -5,7 +5,9 @@
       "startServerReadyPattern": "Ready",
       "url": [
         "http://localhost:3000/",
-        "http://localhost:3000/pricing"
+        "http://localhost:3000/prices",
+        "http://localhost:3000/book",
+        "http://localhost:3000/services/brakes"
       ],
       "numberOfRuns": 3,
       "settings": {

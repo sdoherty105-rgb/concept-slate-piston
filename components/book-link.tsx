@@ -8,19 +8,20 @@ import { useBooking } from "./booking-context";
 type Props = {
   service?: ServiceId;
   symptom?: string;
+  symptomId?: string;
   className?: string;
   children: ReactNode;
 };
 
-export function BookLink({ service, symptom, className, children }: Props) {
+export function BookLink({ service, symptom, symptomId, className, children }: Props) {
   const { setPrefill } = useBooking();
   return (
     <Link
       prefetch={false}
-      href="/#book"
+      href="/book"
       className={className}
       onClick={() => {
-        if (service || symptom) setPrefill({ service, symptom });
+        if (service || symptom || symptomId) setPrefill({ service, symptom, symptomId });
       }}
     >
       {children}
