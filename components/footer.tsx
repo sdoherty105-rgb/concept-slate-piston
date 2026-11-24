@@ -55,9 +55,14 @@ export function Footer() {
       </div>
       <p className="foot__end">
         <a href={CONCEPT_URL}>{CONCEPT_LABEL}</a>
-        <span>
-          Concept by{" "}
-          <a href="https://offshiftstudio.com.au">OFF/SHIFT Studio</a>
+        <span className="foot__credit" data-footer-credit>
+          <span>Designed by</span>
+          <a href="https://offshiftstudio.com.au" rel="noopener" data-credit-link>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="foot__mark foot__mark--light" src="/brand/offshift-wordmark-light.svg" alt="OFF/SHIFT Studio" width={84} height={23} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="foot__mark foot__mark--dark" src="/brand/offshift-wordmark-dark.svg" alt="OFF/SHIFT Studio" width={84} height={23} />
+          </a>
         </span>
       </p>
     </footer>

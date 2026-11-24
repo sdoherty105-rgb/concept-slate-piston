@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="978" height="266" viewBox="-16 -19 978 266" role="img" aria-labelledby="title">
+<title id="title">OFF/SHIFT Studio — wordmark dark</title>
+<metadata>Canonical path artwork. Palette: charcoal #0F1114; sand #C9B89C; stone #F4F1EC; slate #6B7269. All lettering and symbols are outlined geometry. No fonts or raster content.</metadata>
+<path id="letter-O" fill="#0F1114" fill-rule="evenodd" d="M144 68 C144 105 112 134 72 134 C32 134 0 105 0 68 C0 31 32 0 72 0 C112 0 144 31 144 68 Z M116 68 C116 44 97 25 72 25 C47 25 28 44 28 68 C28 92 47 109 72 109 C97 109 116 92 116 68 Z"/>
+<path id="letter-F-1" fill="#0F1114" fill-rule="evenodd" d="M160 2 H269 V26 H187 V56 H251 V80 H187 V132 H160 Z"/>
+<path id="letter-F-2" fill="#0F1114" fill-rule="evenodd" d="M280 2 H395 L380 26 H307 V56 H361 L345 80 H307 V132 H280 Z"/>
+<path id="letter-S-custom" fill="#0F1114" fill-rule="evenodd" d="M455 56 H467 C490 56 506 72 506 94 C506 117 490 132 467 132 H407 L423 108 H466 C474 108 479 103 479 94 C479 86 474 81 466 81 H438 Z"/>
+<path id="letter-H" fill="#0F1114" fill-rule="evenodd" d="M523 2 H550 V56 H617 V2 H644 V132 H617 V80 H550 V132 H523 Z"/>
+<path id="letter-I" fill="#0F1114" fill-rule="evenodd" d="M669 2 H696 V132 H669 Z"/>
+<path id="letter-F-3" fill="#0F1114" fill-rule="evenodd" d="M720 2 H827 V26 H747 V56 H811 V80 H747 V132 H720 Z"/>
+<path id="letter-T" fill="#0F1114" fill-rule="evenodd" d="M830 2 H946 V26 H901 V132 H874 V26 H830 Z"/>
+<path id="slash" fill="#C9B89C" d="M430 -3 H473 L374 141 H332 Z"/>
+<g id="studio" transform="translate(16.5 36.1) scale(.95 .84)">
+<path id="studio-S" fill="#0F1114" fill-rule="evenodd" d="M254 190 C254 183 248 179 239 179 C229 179 223 184 223 191 C223 198 228 201 238 203 L243 204 C252 206 256 210 256 217 C256 226 249 232 238 232 C227 232 220 226 220 217 H224 C224 224 229 228 238 228 C247 228 252 224 252 217 C252 212 248 210 240 208 L235 207 C224 205 219 201 219 192 C219 182 227 175 239 175 C250 175 258 181 258 190 Z"/>
+<path id="studio-T" fill="#0F1114" fill-rule="evenodd" d="M316 176 H350 V180 H335 V231 H331 V180 H316 Z"/>
+<path id="studio-U" fill="#0F1114" fill-rule="evenodd" d="M412 176 H416 V211 C416 222 421 228 429 228 C438 228 443 222 443 211 V176 H447 V211 C447 225 440 232 429 232 C418 232 412 225 412 211 Z"/>
+<path id="studio-D" fill="#0F1114" fill-rule="evenodd" d="M513 176 H527 C545 176 553 186 553 203 C553 220 545 231 527 231 H513 Z M517 180 V227 H527 C542 227 549 218 549 203 C549 188 542 180 527 180 Z"/>
+<path id="studio-I" fill="#0F1114" fill-rule="evenodd" d="M617 176 H621 V231 H617 Z"/>
+<path id="studio-O" fill="#0F1114" fill-rule="evenodd" d="M727 175 C743 175 752 187 752 203 C752 220 743 232 727 232 C711 232 702 220 702 203 C702 187 711 175 727 175 Z M727 179 C714 179 706 189 706 203 C706 218 714 228 727 228 C740 228 748 218 748 203 C748 189 740 179 727 179 Z"/>
+</g>
+</svg>
