@@ -28,7 +28,7 @@ for (const path of pages) {
       await page.goto(path);
       const label = page.getByTestId("concept-label");
       await expect(label).toBeVisible();
-      await expect(label).toHaveText("An OFF/SHIFT concept — fictional demonstration");
+      await expect(label).toHaveText("An OFF/SHIFT concept: a fictional demonstration");
       await expect(label.getByRole("link")).toHaveAttribute("href", CONCEPT_URL);
     });
   });
@@ -412,4 +412,23 @@ test.describe("hotspots at intermediate widths", () => {
       await expect(page).toHaveURL(new RegExp(`${href}$`));
     });
   }
+});
+
+test("footer credit links to OFF/SHIFT and uses the canonical wordmark", async ({ page, request }) => {
+  const fs = await import("node:fs");
+  await page.goto("/");
+  const credit = page.getByRole("contentinfo").locator("[data-footer-credit] a");
+  await expect(credit).toHaveAttribute("href", "https://offshiftstudio.com.au");
+  await expect(credit).toHaveAttribute("rel", /noopener/);
+  for (const [variant, file] of [["light", "offshift-wordmark-light.svg"], ["dark", "offshift-wordmark-dark.svg"]] as const) {
+    const img = credit.locator(`img.foot__mark--${variant}`);
+    await expect(img).toHaveAttribute("alt", "OFF/SHIFT Studio");
+    await expect(img).toHaveAttribute("src", `/brand/${file}`);
+    const served = await request.get(`/brand/${file}`);
+    expect(served.ok()).toBe(true);
+    expect(Buffer.compare(Buffer.from(await served.body()), fs.readFileSync(`public/brand/${file}`))).toBe(0);
+  }
+  const box = await credit.locator("img.foot__mark--light").boundingBox();
+  expect(box?.width ?? 0).toBeGreaterThanOrEqual(72);
+  expect(box?.width ?? 0).toBeLessThanOrEqual(96);
 });

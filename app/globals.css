@@ -313,6 +313,12 @@ html[data-theme="day"] .studio__cta { text-decoration-color: var(--ink); }
   color: var(--muted);
   font-size: 14px;
 }
+.foot__credit { display: inline-flex; align-items: center; gap: 8px; }
+.foot .foot__credit a { display: inline-flex; text-decoration: none; }
+.foot__mark { display: block; width: 84px; height: auto; }
+.foot__mark--dark { display: none; }
+html[data-theme="day"] .foot__mark--light { display: none; }
+html[data-theme="day"] .foot__mark--dark { display: block; }
 .footer-note { color: var(--muted); margin-top: 8px; max-width: 46ch; }
 
 .block { padding: 24px 0; }

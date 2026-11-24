@@ -35,7 +35,7 @@ const body = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "Slate Piston — Workshop console, Welshpool WA",
+    default: "Slate Piston: workshop console, Welshpool WA",
     template: "%s | Slate Piston",
   },
   description:
