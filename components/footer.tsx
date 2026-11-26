@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { business, CONCEPT_LABEL, CONCEPT_URL, navLinks, STUDIO_CTA, STUDIO_ENQUIRY_URL } from "@/lib/data";
+import { business, CONCEPT_DISCLOSURE, CONCEPT_URL, navLinks, STUDIO_CTA, STUDIO_ENQUIRY_URL } from "@/lib/data";
 
 export function Footer() {
   return (
@@ -54,7 +54,7 @@ export function Footer() {
         </div>
       </div>
       <p className="foot__end">
-        <a href={CONCEPT_URL}>{CONCEPT_LABEL}</a>
+        <a href={CONCEPT_URL}>{CONCEPT_DISCLOSURE}</a>
         <span className="foot__credit" data-footer-credit>
           <span>Designed by</span>
           <a href="https://offshiftstudio.com.au" rel="noopener" data-credit-link>

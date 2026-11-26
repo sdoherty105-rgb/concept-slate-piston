@@ -8,6 +8,7 @@ import { useNow } from "./use-now";
 
 export function StatusBar({ initialIso }: { initialIso: string }) {
   const status = workshopStatus(useNow(initialIso));
+  const closed = !status.open;
 
   return (
     <header className="status">
@@ -17,19 +18,23 @@ export function StatusBar({ initialIso }: { initialIso: string }) {
       </Link>
       <div className="status__metrics" aria-label="Demonstration workshop status, Perth time">
         <p>
-          <span className="kicker">Bays free</span>
+          <span className="kicker">{closed ? "Bays tomorrow" : "Bays free"}</span>
           <strong className="num">{status.freeCount}</strong>
         </p>
         <p>
-          <span className="kicker">Next slot</span>
-          <strong className="num">{status.nextSlot}</strong>
+          <span className="kicker">{closed ? "Booking" : "Next slot"}</span>
+          <strong className="num">{closed ? "Online" : status.nextSlot}</strong>
         </p>
         <p>
-          <span className="kicker">Open until</span>
-          <strong className="num">{status.openUntil}</strong>
+          <span className="kicker">{closed ? "Opens" : "Open until"}</span>
+          <strong className="num">{closed ? status.opensAt : status.openUntil}</strong>
         </p>
       </div>
-      <p className="status__demo">Demo data, Perth clock</p>
+      <p className="status__demo">
+        {closed
+          ? `Closed now. Opens ${status.opensAt}. Book online for tomorrow.`
+          : "Demo data, Perth clock"}
+      </p>
       <DaylightToggle />
       <div className="studio">
         <p className="concept-label" data-testid="concept-label">

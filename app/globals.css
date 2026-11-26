@@ -275,7 +275,7 @@ html[data-theme="day"] .studio__cta { text-decoration-color: var(--ink); }
   position: sticky;
   top: 72px;
   align-self: start;
-  padding: 16px 16px 16px 0;
+  padding: 32px 16px 16px 0;
 }
 .summary-strip { display: none; }
 
@@ -350,6 +350,8 @@ html[data-theme="day"] .foot__mark--dark { display: block; }
   margin-bottom: 8px;
 }
 
+.console-layout { display: grid; gap: 0; }
+.console__intro { margin-bottom: 16px; }
 .console {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -848,11 +850,35 @@ html[data-theme="day"] .tracker li:nth-child(1) .stage i:nth-child(-n + 1), html
     grid-area: studio;
     margin: 4px 0 0;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;
-    gap: 2px 12px;
-    padding-top: 8px;
+    gap: 4px 8px;
+    min-height: 44px;
+    max-height: 48px;
+    padding: 2px 8px;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 1.2;
+  }
+  .studio .concept-label {
+    min-width: 0;
+    max-width: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .studio .concept-label a,
+  .studio .studio__cta {
+    min-height: 44px;
+    align-items: center;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+  .studio .studio__cta {
+    flex-shrink: 0;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
   }
   .price-table thead {
     position: absolute;
@@ -933,13 +959,21 @@ html[data-theme="day"] .tracker li:nth-child(1) .stage i:nth-child(-n + 1), html
   }
 }
 
-/* The concept notice is a job-card tag: amber stock, dark type, like the tag hung on a key. */
+/* Concept notice: slim stock tag on the console header, not the studio marketing bar. */
 .studio {
   padding: 6px 12px;
   border-radius: 2px;
-  background: var(--amber);
-  color: #0b1822;
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--lime);
+  background: var(--panel);
+  color: var(--ink);
 }
 .studio .concept-label a,
 .studio .studio__cta,
-html[data-theme="day"] .studio .studio__cta { color: #0b1822; text-decoration-color: #0b1822; }
+html[data-theme="day"] .studio .studio__cta { color: var(--ink); text-decoration-color: var(--lime); }
+
+@media (min-width: 768px) {
+  .app:has(#diagnose) .dock {
+    padding-top: 11.25rem;
+  }
+}

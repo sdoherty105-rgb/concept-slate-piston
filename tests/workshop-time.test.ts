@@ -11,13 +11,28 @@ describe("Perth workshop clock", () => {
     expect(status.bays.filter((b) => b.state === "Free").map((b) => b.name)).toEqual(["Bay A", "Bay C"]);
   });
 
-  it("closes the board on Sunday and names the next opening", () => {
+  it("closes the board on Sunday and shows tomorrow's bays, not zero", () => {
     const status = workshopStatus(new Date("2026-11-01T02:00:00Z"));
     expect(status.open).toBe(false);
     expect(status.openUntil).toBe("Closed");
-    expect(status.freeCount).toBe(0);
-    expect(status.nextSlot).toBe("Mon 7:30 am");
-    expect(status.bays.every((b) => b.state === "Closed")).toBe(true);
+    expect(status.freeCount).toBeGreaterThan(0);
+    expect(status.nextSlot).toBe("Book online");
+    expect(status.opensAt).toBe("7:30 am");
+    expect(status.bays.some((b) => b.state === "Free")).toBe(true);
+  });
+
+  it("reads as open on a Tuesday at 10 am Perth", () => {
+    const status = workshopStatus(new Date("2026-11-10T02:00:00Z"));
+    expect(status.open).toBe(true);
+    expect(status.freeCount).toBeGreaterThan(0);
+  });
+
+  it("reads as closed with friendly fields at 10 pm Perth on a weekday", () => {
+    const status = workshopStatus(new Date("2026-11-10T14:00:00Z"));
+    expect(status.open).toBe(false);
+    expect(status.freeCount).toBeGreaterThan(0);
+    expect(status.nextSlot).toBe("Book online");
+    expect(status.opensAt).toBe("7:30 am");
   });
 
   it("offers seven open days and never a Sunday", () => {

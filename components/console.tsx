@@ -27,7 +27,8 @@ function easeOutBack(t: number) {
 }
 
 export function Console({ items, nowIso, children }: { items: ConsoleItem[]; nowIso: string; children?: ReactNode }) {
-  const bay = workshopStatus(useNow(nowIso)).nextSlot;
+  const liveStatus = workshopStatus(useNow(nowIso));
+  const bay = liveStatus.open ? liveStatus.nextSlot : `${liveStatus.freeCount} tomorrow`;
   const [selected, setSelected] = useState<string | null>(null);
   const [shown, setShown] = useState(0);
   const [angle, setAngle] = useState(-120);
@@ -88,9 +89,10 @@ export function Console({ items, nowIso, children }: { items: ConsoleItem[]; now
     : "No symptom selected.";
 
   return (
-    <div className="console">
+    <div className="console-layout">
+      <div className="console__intro">{children}</div>
+      <div className="console">
       <div className="console__symptoms">
-        {children}
         <div className="js-only">
         <fieldset>
           <legend className="sr-only">What the car is doing</legend>
@@ -181,6 +183,7 @@ export function Console({ items, nowIso, children }: { items: ConsoleItem[]; now
           </div>
         )}
         <p className="demo-line">Demonstration readout. Not a diagnosis and not a quote.</p>
+      </div>
       </div>
     </div>
   );
