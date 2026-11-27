@@ -39,6 +39,8 @@ export type WorkshopStatus = {
   nextSlot: string;
   openUntil: string;
   open: boolean;
+  /** Perth opening time on the next bookable day (e.g. "7:30 am"). */
+  opensAt: string;
 };
 
 export function perthNow(date: Date): PerthNow {
@@ -86,6 +88,23 @@ function nextOpening(p: PerthNow): string {
   return "Mon 7:30 am";
 }
 
+/** Time-of-day portion of {@link nextOpening}, e.g. "7:30 am". */
+export function opensAtShort(p: PerthNow): string {
+  const full = nextOpening(p);
+  return full.replace(/^(?:Today|Tomorrow|Mon|Tue|Wed|Thu|Fri|Sat)\s+/, "");
+}
+
+/** First bookable morning on the next open day, used for tomorrow's bay count. */
+export function nextBookableMorning(from: Date): Date {
+  const days = bookDays(from, 1);
+  if (!days[0]) return from;
+  const [year, month, day] = days[0].iso.split("-").map(Number);
+  const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+  const hour = weekday === 6 ? 8 : 7;
+  const minute = weekday === 6 ? 0 : 30;
+  return new Date(Date.UTC(year, month - 1, day, hour - 8, minute));
+}
+
 export function workshopStatus(date: Date): WorkshopStatus {
   const p = perthNow(date);
   const mins = p.hour * 60 + p.minute;
@@ -93,14 +112,21 @@ export function workshopStatus(date: Date): WorkshopStatus {
   const saturdayOpen = p.weekday === 6 && mins >= 8 * 60 && mins < 12 * 60;
   const open = weekdayOpen || saturdayOpen;
   const openUntil = !open ? "Closed" : p.weekday === 6 ? "12:00 pm" : "5:00 pm";
+  const opensAt = opensAtShort(p);
 
   if (!open) {
+    const tomorrow = workshopStatus(nextBookableMorning(date));
     return {
-      bays: bays.map((b) => ({ ...b, state: "Closed", detail: "Workshop closed" })),
-      freeCount: 0,
-      nextSlot: nextOpening(p),
+      bays: tomorrow.bays.map((b) => ({
+        ...b,
+        state: b.state === "Free" ? "Free" : "Occupied",
+        detail: b.state === "Free" ? "Free tomorrow" : b.detail,
+      })),
+      freeCount: tomorrow.freeCount,
+      nextSlot: "Book online",
       openUntil,
       open: false,
+      opensAt,
     };
   }
 
@@ -117,6 +143,7 @@ export function workshopStatus(date: Date): WorkshopStatus {
     nextSlot: firstFree ? firstFree.name : half,
     openUntil,
     open: true,
+    opensAt,
   };
 }
 

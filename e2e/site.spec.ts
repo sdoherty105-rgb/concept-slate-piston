@@ -28,7 +28,7 @@ for (const path of pages) {
       await page.goto(path);
       const label = page.getByTestId("concept-label");
       await expect(label).toBeVisible();
-      await expect(label).toHaveText("An OFF/SHIFT concept: a fictional demonstration");
+      await expect(label).toHaveText("Fictional concept by OFF/SHIFT Studio");
       await expect(label.getByRole("link")).toHaveAttribute("href", CONCEPT_URL);
     });
   });
@@ -52,7 +52,7 @@ test("home is a console, not a card grid", async ({ page }) => {
   await expect(page.locator(".tracker li")).toHaveCount(4);
   await expect(page.locator(".service-card")).toHaveCount(0);
   await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
-  await expect(page.getByText("Demo data, Perth clock")).toBeVisible();
+  await expect(page.getByText(/Demo data, Perth clock|Closed now\. Opens .+\. Book online for tomorrow\./)).toBeVisible();
 });
 
 test("concept label is inside the first viewport at 390 and 1440", async ({ page }) => {
@@ -234,7 +234,7 @@ test.describe("OFF/SHIFT showroom links", () => {
       await page.goto(path);
       const cta = page.getByTestId("studio-cta");
       await expect(cta).toBeVisible();
-      await expect(cta).toHaveText("Want a website like this?");
+      await expect(cta).toHaveText("Want a site like this?");
       await expect(cta).toHaveAttribute("href", ENQUIRY);
       const foot = page.getByRole("contentinfo");
       await expect(foot.getByRole("link", { name: "Start a project with OFF/SHIFT" })).toHaveAttribute("href", ENQUIRY);
